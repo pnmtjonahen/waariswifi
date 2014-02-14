@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WififCollector</title>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="js/libs/d3/d3.v3.js"></script>
+        <script type="text/javascript" src="js/libs/jquery/jquery.js"></script>
+
+        <style>
+            circle {
+                fill: #ccc;
+                stroke: #fff;
+                stroke-width: 1.5px;
+            }
+
+            text {
+                fill: #000;
+                font: 10px sans-serif;
+                pointer-events: none;
+            }
+        </style>
+    </head>
+    <body>
+        <script>
+            $(document).ready(function() {
+
+                if (!("WebSocket" in window)) {
+                    $('#chatLog, input, button, #examples').fadeOut("fast");
+                    $('<p>Oh no, you need a browser that supports WebSockets. How about <a href="http://www.google.com/chrome">Google Chrome</a>?</p>').appendTo('#container');
+                } else {
+                    //The user has WebSockets
+
+
+                    function connect() {
+                        var socket;
+                        var host = "ws://" + location.host + "/server/wifiendpoint";
+
+                        try {
+                            var socket = new WebSocket(host);
+
+                            message('<p class="event">Socket Status: ' + socket.readyState);
+
+                            socket.onopen = function() {
+                                message('<p class="event">Socket Status: ' + socket.readyState + ' (open) ' + host);
+                            }
+
+                            socket.onmessage = function(msg) {
+                                var obj = JSON.parse(msg.data);
+                                message('<p class="message">Received: ' + obj.y);
+                            }
+
+                            socket.onclose = function() {
+                                message('<p class="event">Socket Status: ' + socket.readyState + ' (Closed)');
+                            }
+
+                        } catch (exception) {
+                            message('<p>Error' + exception);
+                        }
+
+                        function send() {
+                            var text = $('#text').val();
+
+                            if (text == "") {
+                                message('<p class="warning">Please enter a message');
+                                return;
+                            }
+                            try {
+                                socket.send(text);
+                                message('<p class="event">Sent: ' + text)
+
+                            } catch (exception) {
+                                message('<p class="warning">');
+                            }
+                            $('#text').val("");
+                        }
+
+                        function message(msg) {
+                            $('#chatLog').empty();
+                            $('#chatLog').append(msg + '</p>');
+                        }
+                    }//End connect
+                    connect();
+
+                }//End else
+
+            });
+        </script>
+        <div id="chatLog"></div>  
+    </body>
+</html>
