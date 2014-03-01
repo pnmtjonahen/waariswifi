@@ -25,11 +25,19 @@ public class WifiDevicePayload {
     private final String deviceMac;
     private final double x;
     private final double y;
+    private final double size;
+    private final boolean triangulated;
 
-    public WifiDevicePayload(String deviceMac, double x, double y) {
+    public WifiDevicePayload(final boolean triangulated, 
+                             final String deviceMac, 
+                             final double x, 
+                             final double y, 
+                             final double size) {
         this.deviceMac = deviceMac;
         this.x = x;
         this.y = y;
+        this.size = size;
+        this.triangulated = triangulated;
     }
 
     public String getDeviceMac() {
@@ -42,6 +50,14 @@ public class WifiDevicePayload {
 
     public double getY() {
         return y;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    public boolean isTriangulated() {
+        return triangulated;
     }
 
     

@@ -64,7 +64,13 @@ public class WifiEndpoint {
         for (Session s : sessions) {
             if (s.isOpen()) {
                 try {
-                    s.getBasicRemote().sendText(String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\"}", msg.getDeviceMac(), msg.getX(), msg.getY()));
+                    s.getBasicRemote().sendText(
+                                String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"size\":\"%f\", \"triangulated\":\"%s\"}", 
+                                        msg.getDeviceMac(), 
+                                        msg.getX(), 
+                                        msg.getY(), 
+                                        msg.getSize(),
+                                        msg.isTriangulated()));
                 } catch (IOException ex) {
                 }
             }

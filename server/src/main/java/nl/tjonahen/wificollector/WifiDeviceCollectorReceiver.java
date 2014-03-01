@@ -17,11 +17,11 @@
 
 package nl.tjonahen.wificollector;
 
-import java.util.concurrent.ExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -37,13 +37,11 @@ import javax.ws.rs.core.Response;
 public class WifiDeviceCollectorReceiver {
     @Inject
     private Event<WifiDevicePayload> wsEvent; 
+    
+    @Inject 
+    private Triangulation triangulation;
 
-    private final ExecutorService executorService;
-
-    public WifiDeviceCollectorReceiver() {
-        this.executorService = java.util.concurrent.Executors.newCachedThreadPool();
-    }
-
+    
     @POST
     @Path("/{endpointmac}/{devicemac}/")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -52,17 +50,33 @@ public class WifiDeviceCollectorReceiver {
             @PathParam(value = "devicemac") final String deviceMac, 
             final String data) 
     {
-        final String[] fields = data.split(":");
-        if ("50:46:5d:16:8a:69".equals(deviceMac)) {
-            wsEvent.fire(new WifiDevicePayload("MY NEXUS 7", 0, calculateDistance(Math.abs(Double.valueOf(fields[1])), Double.valueOf(fields[2]))));
-        } else {
-            wsEvent.fire(new WifiDevicePayload(deviceMac, 0, calculateDistance(Math.abs(Double.valueOf(fields[1])), Double.valueOf(fields[2]))));
+
+        final WifiDevicePayload[] devicePayload = triangulation.determineLocation(endpointMac, deviceMac, data);
+        
+        if (devicePayload != null) {
+            for (WifiDevicePayload p : devicePayload) {
+                wsEvent.fire(p);
+            }
         }
+        
         return Response.ok().build();
     }
     
-    public double calculateDistance(double levelInDb, double freqInMHz)    {
-       double exp = (27.55 - (20 * Math.log10(freqInMHz)) + levelInDb) / 20.0;
-       return Math.pow(10.0, exp);
-    }    
+
+    
+    @GET
+    @Path("/{endpointmac}/")
+    public String processGet(@PathParam(value = "endpointmac") final String endpointMac) {
+        wsEvent.fire(newWifiDevicePayload("P1", 0, 0));
+        wsEvent.fire(newWifiDevicePayload("P2", 0, 100));
+        wsEvent.fire(newWifiDevicePayload("P3", 100, 0));
+        wsEvent.fire(newWifiDevicePayload("P4", -100, 0));
+        wsEvent.fire(newWifiDevicePayload("P5", 0, -100));
+        
+        return "done....";
+    }
+    
+    private WifiDevicePayload newWifiDevicePayload(String name, double x, double y) {
+        return new WifiDevicePayload(true, name, x, y, 5);
+    }
 }

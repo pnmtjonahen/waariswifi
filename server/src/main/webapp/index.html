@@ -46,7 +46,7 @@
 
                             socket.onmessage = function(msg) {
                                 var obj = JSON.parse(msg.data);
-                                message('<p class="message">Received: ' + obj.y);
+                                message('<p class="message">Received: ' + obj.device + "(" + obj.x + "," + obj.y + ")");
                             }
 
                             socket.onclose = function() {
