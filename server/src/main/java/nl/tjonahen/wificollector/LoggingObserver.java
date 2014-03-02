@@ -17,37 +17,22 @@
 
 package nl.tjonahen.wificollector;
 
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class Node {
-    private final String name;
-    private final Set<Vector> vectors;
-
-    public Node(String name) {
-        this.name = name;
-        this.vectors = new TreeSet<>(new Comparator<Vector>() {
-
-            @Override
-            public int compare(Vector o1, Vector o2) {
-                return o1.getEndnode().compareTo(o2.getEndnode());
-            }
-        });
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Set<Vector> getVectors() {
-        return vectors;
-    }
-    
-    
-    
+@ApplicationScoped
+public class LoggingObserver {
+        public void onJMSMessage(@Observes WifiDevicePayload msg) {
+            System.out.println(String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s}", 
+                                        msg.getDeviceMac(), 
+                                        msg.getX(), 
+                                        msg.getY(), 
+                                        msg.getEndpointMac(),
+                                        msg.getDistance(),
+                                        msg.isTriangulated()));
+        }
 }

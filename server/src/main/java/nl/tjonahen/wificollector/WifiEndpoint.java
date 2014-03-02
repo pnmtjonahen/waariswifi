@@ -65,11 +65,12 @@ public class WifiEndpoint {
             if (s.isOpen()) {
                 try {
                     s.getBasicRemote().sendText(
-                                String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"size\":\"%f\", \"triangulated\":\"%s\"}", 
+                                String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s}", 
                                         msg.getDeviceMac(), 
                                         msg.getX(), 
                                         msg.getY(), 
-                                        msg.getSize(),
+                                        msg.getEndpointMac(),
+                                        msg.getDistance(),
                                         msg.isTriangulated()));
                 } catch (IOException ex) {
                 }

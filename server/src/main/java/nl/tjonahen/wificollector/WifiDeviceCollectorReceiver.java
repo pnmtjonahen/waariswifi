@@ -77,6 +77,6 @@ public class WifiDeviceCollectorReceiver {
     }
     
     private WifiDevicePayload newWifiDevicePayload(String name, double x, double y) {
-        return new WifiDevicePayload(true, name, x, y, 5);
+        return new WifiDevicePayload(true, name, x, y, "home", 5);
     }
 }

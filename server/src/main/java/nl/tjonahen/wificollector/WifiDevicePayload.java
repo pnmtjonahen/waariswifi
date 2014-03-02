@@ -13,6 +13,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *//*
+ * Copyright (C) 2014 Philippe Tjon-A-Hen philippe@tjonahen.nl
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package nl.tjonahen.wificollector;
@@ -25,19 +40,22 @@ public class WifiDevicePayload {
     private final String deviceMac;
     private final double x;
     private final double y;
-    private final double size;
+    private final String endpointMac;
+    private final double distance;
     private final boolean triangulated;
 
     public WifiDevicePayload(final boolean triangulated, 
                              final String deviceMac, 
                              final double x, 
-                             final double y, 
-                             final double size) {
+                             final double y,
+                             final String endpointMac,
+                             final double distance) {
         this.deviceMac = deviceMac;
         this.x = x;
         this.y = y;
-        this.size = size;
+        this.distance = distance;
         this.triangulated = triangulated;
+        this.endpointMac = endpointMac;
     }
 
     public String getDeviceMac() {
@@ -52,13 +70,19 @@ public class WifiDevicePayload {
         return y;
     }
 
-    public double getSize() {
-        return size;
+    public double getDistance() {
+        return distance;
     }
 
     public boolean isTriangulated() {
         return triangulated;
     }
+
+    public String getEndpointMac() {
+        return endpointMac;
+    }
+    
+    
 
     
 }

@@ -22,6 +22,76 @@
     </head>
     <body>
         <script>
+            function Node(id, distance) {
+                this.id = id;
+                this.distance = distance;
+                this.count = 0;
+                
+                this.increment = function() {
+                    this.count++;
+                };
+                
+                this.name = function () {
+                    return this.id + "," + this.count;
+                };
+                
+                this.radius = function () {
+                    if (this.fixed) {
+                        return 5;
+                    }
+                    if (this.distance > 1) {
+                        if (this.distance < 2) {
+                            return 18;
+                        } else if (this.distance < 3) {
+                            return 16;
+                        } else if (this.distance < 4) {
+                            return 14;
+                        } else if (this.distance < 6) {
+                            return 12;
+                        } else if (this.distance < 8) {
+                            return 10;
+                        } else if (this.distance < 10) {
+                            return 8;
+                        } else if (this.distance < 20) {
+                            return 6;
+                        } else if (this.distance < 30) {
+                            return 4;
+                        } else {
+                            return 2;
+                        }
+                    }
+                    return 20;
+                };
+                
+                this.color = function () {
+                    if (this.fixed) {
+                        return "gray";
+                    }
+                    if (this.distance > 1) {
+                        if (this.distance < 2) {
+                            return "red";
+                        } else if (this.distance < 3) {
+                            return "orange";
+                        } else if (this.distance < 4) {
+                            return "yellow";
+                        } else if (this.distance < 6) {
+                            return "green";
+                        } else if (this.distance < 8) {
+                            return "purple";
+                        } else if (this.distance < 10) {
+                            return "pink";
+                        } else if (this.distance < 20) {
+                            return "brown";
+                        } else if (this.distance < 30) {
+                            return "black";
+                        } else {
+                            return "black";
+                        }
+                    }
+                    return "white";
+                };
+                
+            }
             function myGraph(el) {
 
                 // Add and remove elements on the graph object
@@ -30,12 +100,10 @@
                     if (n) {
                         message("update node :" + id + ", " + size);
                         n.size = size;
-                        n.count = n.count+1; 
-                        
+                        n.increment(); 
                     } else {
                         message("add node    :" + id + ", " + size);
-                        nodes.push({"id": id, "size":size, "count":0});
-//                        links.push({"source": findNode(fixednode.id), "target": findNode(id)});
+                        nodes.push(new Node(id, size));
                     }
                     update();
                 }
@@ -44,7 +112,7 @@
                     var i = 0;
                     var n = findNode(id);
                     while (i < links.length) {
-                        if ((links[i]['source'] == n) || (links[i]['target'] == n))
+                        if ((links[i]['source'] === n) || (links[i]['target'] === n))
                             links.splice(i, 1);
                         else
                             i++;
@@ -77,9 +145,12 @@
                 // set up the D3 visualisation in the specified element
                 var w = 1024,
                         h = 700;
-                var fixednode = {id:"P", size:5, x:w/2, y:h/2, fixed:true};
+                var fixednode = new Node("P", 0);
                 
                 this.addFixedNode = function () {
+                    fixednode.x=w/2;
+                    fixednode.y=h/2;
+                    fixednode.fixed = true;
                     nodes.push(fixednode);
                     update();
                 }
@@ -117,8 +188,7 @@
                             .attr("class", "node")
                             .call(force.drag);
                     nodeEnter.append("circle")
-                            .attr("r", 1)
-                            .attr("fill", "grey");
+                            .attr("r", 1);
                     nodeEnter.append("text")
                             .attr("x", 10)
                             .attr("dy", ".35em")
@@ -132,12 +202,16 @@
                         single.selectAll("circle")
                                 .transition()
                                 .attr("r", function() {
-                                    return d.size;
+                                    return d.radius();
+                                });
+                        single.selectAll("circle")
+                                .style("fill", function() {
+                                    return d.color();
                                 });
                         single.selectAll("text")
                                 .transition()
                                 .text(function() {
-                                    return d.id + "," + d.count;
+                                    return d.name();
                                 });
                     });
                     
@@ -185,37 +259,9 @@
 
                             socket.onmessage = function(msg) {
                                 var obj = JSON.parse(msg.data);
-                                message('<p class="message">Received: ' + obj.device + ", " + obj.size);
-                                var size = 20;
-                                var color = "red";
-                                if (obj.size > 1) {
-                                    if (obj.size < 2) {
-                                        size = 18;
-                                    } else if (obj.size < 3) {
-                                        size = 16;
-                                    } else if (obj.size < 4) {
-                                        size = 14;
-                                    } else if (obj.size < 6) {
-                                        color = "yellow";
-                                        size = 12;
-                                    } else if (obj.size < 8) {
-                                        color = "green";
-                                        size = 10;
-                                    } else if (obj.size < 10) {
-                                        color = "blue";
-                                        size = 8;
-                                    } else if (obj.size < 20) {
-                                        color = "purple";
-                                        size = 6;
-                                    } else if (obj.size < 30) {
-                                        color = "brown";
-                                        size = 4;
-                                    } else {
-                                        color = "black";
-                                        size = 2
-                                    }
-                                }
-                                graph.addNode(obj.device, size, color);
+                                message('<p class="message">Received: ' + obj.device + ", " + obj.distance);
+
+                                graph.addNode(obj.device, obj.distance);
                             }
 
                             socket.onclose = function() {

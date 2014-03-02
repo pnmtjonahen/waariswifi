@@ -51,8 +51,8 @@ public class TriangulationTest {
         Assert.assertEquals(1, determineLocation.length);
         
         Assert.assertEquals("84:51:81:a7:44:47", determineLocation[0].getDeviceMac());
-        Assert.assertEquals(Double.valueOf("5.0"), Double.valueOf(determineLocation[0].getSize()));
-        Assert.assertEquals(Double.valueOf("-1200.610677326515"), Double.valueOf(determineLocation[0].getX()));
+        Assert.assertEquals(Double.valueOf("61.12402594648713"), Double.valueOf(determineLocation[0].getDistance()));
+        Assert.assertEquals(Double.valueOf("-574.8236327489628"), Double.valueOf(determineLocation[0].getX()));
         Assert.assertEquals(Double.NaN, determineLocation[0].getY(), 0);
         
         

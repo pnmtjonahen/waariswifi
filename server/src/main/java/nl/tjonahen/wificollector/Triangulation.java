@@ -17,7 +17,6 @@
 
 package nl.tjonahen.wificollector;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.enterprise.context.ApplicationScoped;
@@ -32,29 +31,14 @@ public class Triangulation {
     @Inject 
     private MacNameResolver macNameResolver;
     
-    private double p1p2distance;
+    private EndpointDevice P1 = new EndpointDevice("18:3d:a2:57:e3:50", 0, 0);
+    private EndpointDevice P2 = new EndpointDevice("00:16:0a:26:a7:06", 3.2d, 0);
+    private EndpointDevice P3 = null;
+    
 
-    private final Map<String, Node> nodeMap;
+    private final Map<String, Device> nodeMap;
     public Triangulation() {
         nodeMap = new TreeMap<>();
-    }
-    static class Point {
-        final double x;
-        final double y;
-
-        public Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public double getX() {
-            return x;
-        }
-
-        public double getY() {
-            return y;
-        }
-        
     }
     
     public WifiDevicePayload[] determineLocation(final String endpointMac, final String deviceMac, final String data) {
@@ -62,34 +46,22 @@ public class Triangulation {
         final String[] fields = data.split(":");
         final double distance = calculateDistance(Math.abs(Double.valueOf(fields[1])), Double.valueOf(fields[2]));
         if ("18:3d:a2:57:e3:50".equals(endpointMac) && "00:16:0a:26:a7:06".equals(deviceMac)) {
-            p1p2distance = distance;
-            final WifiDevicePayload[] result = {new WifiDevicePayload(true, "P1", 0, 0, 5), new WifiDevicePayload(true, "P2", distance, 0, 5)};
+            final WifiDevicePayload[] result = {
+                                    new WifiDevicePayload(true, "P1", P1.getX(), P1.getY(), "P1", 0), 
+                                    new WifiDevicePayload(true, "P2", P2.getX(), P2.getX(), "P1", distance)
+            };
             return result;
         } else {
             if (nodeMap.containsKey(deviceMac)) {
-                final Node n = nodeMap.get(deviceMac);
-                n.getVectors().add(new Vector(endpointMac, distance));
-                if (n.getVectors().size() >= 2) {
-                    final Point P1 = new Point(0,0);
-                    final Point P2 = new Point(p1p2distance, 0);
-                    final Iterator<Vector> it = n.getVectors().iterator();
-                    final Vector v1 = it.next();
-                    final Vector v2 = it.next();
-                    double r1 = v1.getDistance();
-                    double r2 = v2.getDistance();
-                    if ("00:16:0a:26:a7:06".equals(v1.getEndnode())) {
-                        r1 = v2.getDistance();
-                        r2 = v1.getDistance();
-                    }
-                    System.out.println(String.format("%.4f, %.4f, %.4f", p1p2distance, r1, r2) );
-                    double x = (Math.pow(r1, 2) - Math.pow(r2, 2) + Math.pow(P2.getX(), 2)) / (2*P2.getX());
-                    double y = Math.sqrt(Math.pow(r1, 2) - Math.pow(x, 2));                    
-                    final WifiDevicePayload[] result = {new WifiDevicePayload(true, deviceMac, x, y, 5)};
-                    return result;
-                }
+                final Device n = nodeMap.get(deviceMac);
+                n.update(endpointMac, distance);
+                final WifiDevicePayload[] result = {
+                                new WifiDevicePayload(true, deviceMac, n.getX(), n.getY(), endpointMac, distance)
+                };
+                return result;
             } else {
-                final Node n = new Node(deviceMac);
-                n.getVectors().add(new Vector(endpointMac, distance));
+                final Device n = Device.create(P1, P2, P3);
+                n.update(endpointMac, distance);
                 nodeMap.put(deviceMac, n);
             }
 //           return null;
@@ -98,6 +70,7 @@ public class Triangulation {
                                                                 name, 
                                                                 0, 
                                                                 0, 
+                                                                endpointMac, 
                                                                 distance) };
             return result;
         }
