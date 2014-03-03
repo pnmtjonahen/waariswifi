@@ -23,6 +23,9 @@
     <body>
         <script>
             function myGraph(el) {
+                function message(msg) {
+                    console.log(msg);
+                }
                 var w = 1024, woffset = w / 2
                         h = 700, hoffset = h / 2
                         scale = 250;
@@ -30,12 +33,14 @@
                 // Add and remove elements on the graph object
                 this.addNode = function(n) {
                     if (n.triangulated) {
-                        var current = findNode(n.id);
+                        var current = findNode(n.device);
                         if (current) {
+                            message("update node " + n.device);
                             current.distance = n.distance;
                             current.x = woffset + (n.x*scale); 
                             current.y = hoffset + (n.y*scale); 
                         } else {
+                            message("add node " + n.device);
                             nodes.push({"id": n.device, "x":woffset + (n.x*scale), "y":hoffset + (n.y*scale), "distance":n.distance, "fixed":true});
                         }
                         update();

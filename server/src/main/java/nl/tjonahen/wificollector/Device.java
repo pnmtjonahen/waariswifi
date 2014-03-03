@@ -31,8 +31,8 @@ public class Device {
     private EndpointDevice P2;
     private EndpointDevice P3;
 
-    private double x;
-    private double y;
+    private double x = Double.NaN;
+    private double y = Double.NaN;
     
     public static Device create(final EndpointDevice P1, final EndpointDevice P2, final EndpointDevice P3) {
         final Device device = new Device();
@@ -54,10 +54,6 @@ public class Device {
     }
 
     private void recalculate() {
-        System.out.println(String.format("%.4f, %.4f, %.4f", P2.getX(), distanceToP1, distanceToP2) );
-
-//        x = (Math.pow(distanceToP1, 2) - Math.pow(distanceToP2, 2) + Math.pow(P2.getX(), 2)) / (2*P2.getX());
-//        y = Math.sqrt(Math.pow(distanceToP1, 2) - Math.pow(x, 2));      
     /*
                     A
                     /\
@@ -93,7 +89,15 @@ public class Device {
     }
             
     public boolean isValid() {
-        return x != Double.NaN && y != Double.NaN;
+        return isXValid() && isYValid();
+    }
+
+    private boolean isYValid() {
+        return !Double.isNaN(y);
+    }
+
+    private boolean isXValid() {
+        return !Double.isNaN(x);
     }
     
 }

@@ -46,10 +46,7 @@ public class Triangulation {
         final double distance = calculateDistance(Math.abs(Double.valueOf(fields[1])), Double.valueOf(fields[2]));
         
         if (endpointMapping.getP1().isEndpoint(endpointMac) && endpointMapping.getP2().isEndpoint(deviceMac)) {
-            // update endpoint mapping and return new endpoints
-//            endpointMapping.update(endpointMac, deviceMac, distance);
-  // fixed location
-            endpointMapping.update(endpointMapping.getP1().getMac(), endpointMapping.getP2().getMac(), 3.2d);
+            endpointMapping.update(endpointMac, deviceMac, distance);
             
             final WifiDevicePayload[] result = {
                     new WifiDevicePayload(true, "P1", 
@@ -62,21 +59,19 @@ public class Triangulation {
             };
             return result;
         } else {
+            final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
             if (nodeMap.containsKey(deviceMac)) {
                 final Device n = nodeMap.get(deviceMac);
                 n.update(endpointMac, distance);
-                if (n.isValid()) {
-                    final WifiDevicePayload[] result = {
-                                    new WifiDevicePayload(true, deviceMac, n.getX(), n.getY(), endpointMac, distance)
-                    };
-                    return result;
-                } 
-            } else {
-                final Device n = Device.create(endpointMapping.getP1(), endpointMapping.getP2(), endpointMapping.getP3());
-                n.update(endpointMac, distance);
-                nodeMap.put(deviceMac, n);
+                final WifiDevicePayload[] result = {
+                                new WifiDevicePayload(n.isValid(), name, n.getX(), n.getY(), endpointMac, distance)
+                };
+                return result;
             }
-            final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
+            final Device n = Device.create(endpointMapping.getP1(), endpointMapping.getP2(), endpointMapping.getP3());
+            n.update(endpointMac, distance);
+            nodeMap.put(deviceMac, n);
+            
             final WifiDevicePayload[] result = { new WifiDevicePayload(false, 
                                                                 name, 
                                                                 0, 
