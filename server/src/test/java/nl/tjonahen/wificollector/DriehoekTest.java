@@ -44,7 +44,7 @@ public class DriehoekTest {
         double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
         double C = 180.0 - A - B;
         
-        System.out.println(String.format("%.2f %.2f %.2f", A, B, C));
+        System.out.println(String.format("Test 1 %.2f %.2f %.2f", A, B, C));
     }
     @Test
     public void testCosinusRegel2() {
@@ -56,7 +56,7 @@ public class DriehoekTest {
         double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
         double C = 180.0 - A - B;
         
-        System.out.println(String.format("%.2f %.2f %.2f", A, B, C));
+        System.out.println(String.format("Test 2 %.2f %.2f %.2f", A, B, C));
     }
     @Test
     public void testCosinusRegel3() {
@@ -68,6 +68,6 @@ public class DriehoekTest {
         double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
         double A = 90.0 - B;
         
-        System.out.println(String.format("%.2f %.2f %.2f", A, B, 90.0));
+        System.out.println(String.format("Test 3 %.2f %.2f %.2f", A, B, 90.0));
     }
 }

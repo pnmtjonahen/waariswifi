@@ -22,9 +22,9 @@ package nl.tjonahen.wificollector;
  */
 public class EndpointDevice {
 
-    final String mac;
-    final double x;
-    final double y;
+    private final String mac;
+    private double x;
+    private double y;
 
     public EndpointDevice(String mac, double x, double y) {
         this.mac = mac;
@@ -48,6 +48,15 @@ public class EndpointDevice {
         return mac.equals(endpointmac);
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    
     
     
 }

@@ -56,8 +56,31 @@ public class Device {
     private void recalculate() {
         System.out.println(String.format("%.4f, %.4f, %.4f", P2.getX(), distanceToP1, distanceToP2) );
 
-        x = (Math.pow(distanceToP1, 2) - Math.pow(distanceToP2, 2) + Math.pow(P2.getX(), 2)) / (2*P2.getX());
-        y = Math.sqrt(Math.pow(distanceToP1, 2) - Math.pow(x, 2));                    
+//        x = (Math.pow(distanceToP1, 2) - Math.pow(distanceToP2, 2) + Math.pow(P2.getX(), 2)) / (2*P2.getX());
+//        y = Math.sqrt(Math.pow(distanceToP1, 2) - Math.pow(x, 2));      
+    /*
+                    A
+                    /\
+                 c /  \ b
+                  /    \
+                 B------C
+                     a    
+    
+    P1 = B
+    P2 = C
+    P3 = A
+    
+    */        
+        double a = P2.getX();
+        double b = distanceToP2;
+        double c = distanceToP1;
+        
+        double A = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2))/-(2*b*c)) * 180/Math.PI;
+        double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
+        double C = 180.0 - A - B;
+        
+        y = c * Math.sin(Math.toRadians( B ));
+        x = Math.sqrt(Math.pow(c, 2) - Math.pow(y, 2));
         
     }
 
@@ -69,6 +92,8 @@ public class Device {
         return y;
     }
             
-    
+    public boolean isValid() {
+        return x != Double.NaN && y != Double.NaN;
+    }
     
 }

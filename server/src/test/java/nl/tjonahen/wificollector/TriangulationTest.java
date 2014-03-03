@@ -44,7 +44,7 @@ public class TriangulationTest {
         final String data3 ="1393001370.977584000:-76:2462";
         Triangulation triangulate = new Triangulation();
 
-        Assert.assertEquals(2, triangulate.determineLocation(p1, p2, data1).length);
+        Assert.assertEquals(3, triangulate.determineLocation(p1, p2, data1).length);
         Assert.assertNotNull(triangulate.determineLocation(p1, p3, data2));
         final WifiDevicePayload[] determineLocation = triangulate.determineLocation(p2, p3, data3);
         Assert.assertNotNull(determineLocation);
@@ -52,10 +52,12 @@ public class TriangulationTest {
         
         Assert.assertEquals("84:51:81:a7:44:47", determineLocation[0].getDeviceMac());
         Assert.assertEquals(Double.valueOf("61.12402594648713"), Double.valueOf(determineLocation[0].getDistance()));
-        Assert.assertEquals(Double.valueOf("-574.8236327489628"), Double.valueOf(determineLocation[0].getX()));
-        Assert.assertEquals(Double.NaN, determineLocation[0].getY(), 0);
+        Assert.assertEquals(Double.valueOf("0"), Double.valueOf(determineLocation[0].getX()));
+        Assert.assertEquals(Double.valueOf("0"), determineLocation[0].getY(), 0);
         
         
     }
+    
+    
 
 }
