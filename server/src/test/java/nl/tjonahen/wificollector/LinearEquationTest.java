@@ -14,109 +14,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.tjonahen.wificollector;
+
+import org.junit.Test;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class Device {
-    
-    private double distanceToP1;
-    private double distanceToP2;
-    private double distanceToP3;
-    
-    private EndpointDevice P1;
-    private EndpointDevice P2;
-    private EndpointDevice P3;
+public class LinearEquationTest {
 
-    private double x = Double.NaN;
-    private double y = Double.NaN;
-    
-    private boolean valid;
-    
-    public static Device create(final EndpointDevice P1, final EndpointDevice P2, final EndpointDevice P3) {
-        final Device device = new Device();
-        device.P1 = P1;
-        device.P2 = P2;
-        device.P3 = P3;
-        return device;
-    }
+    private static class Point {
 
-    public void update(final String endpointmac, final double distance) {
-        if (P1.isEndpoint(endpointmac)) {
-            distanceToP1 = distance;
-        } else if (P2.isEndpoint(endpointmac)) {
-            distanceToP2 = distance;
-        } else if (P2.isEndpoint(endpointmac)) {
-            distanceToP3 = distance;
+        double x;
+        double y;
+
+        public Point(double x, double y) {
+            this.x = x;
+            this.y = y;
         }
-        recalculate();
     }
 
-    private void recalculate() {
-    /*
-                    A
-                    /\
-                 c /  \ b
-                  /    \
-                 B------C
-                     a    
-    
-    P1 = B
-    P2 = C
-    P3 = A
-    
-    */        
-//        double a = P2.getX();
-//        double b = distanceToP2;
-//        double c = distanceToP1;
-//        
-//        double A = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2))/-(2*b*c)) * 180/Math.PI;
-//        double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
-//        double C = 180.0 - A - B;
-//        
-//        y = c * Math.sin(Math.toRadians( B ));
-//        x = Math.sqrt(Math.pow(c, 2) - Math.pow(y, 2));
-        
-        valid = calculateThreeCircleIntersection(distanceToP1, distanceToP2, distanceToP3);
-    }
+    @Test
+    public void test() {
 
-    public double getX() {
-        return x;
-    }
+//  AP1: (x – AP1.x)^2  + (y – AP1.y)^2 = d1^2
+//  AP2: (x – AP2.x)^2  + (y – AP2.y)^2 = d2^2
+//  AP3: (x – AP3.x)^2  + (y – AP3.y)^2 = d3^2 
+        final Point AP1 = new Point(0, 0);
+        final Point AP2 = new Point(26, 0);
+        final Point AP3 = new Point(16, 26);
 
-    public double getY() {
-        return y;
-    }
-            
-    public boolean isValid() {
-        return valid;
-    }
+        final double d1 = 10;
+        final double d2 = 19;
+        final double d3 = 0;
 
-    private boolean isYValid() {
-        return !Double.isNaN(y);
-    }
+        calculateThreeCircleIntersection(AP1.x, AP1.y, d1, AP2.x, AP2.y, d2, AP3.x, AP3.y, d3);
 
-    private boolean isXValid() {
-        return !Double.isNaN(x);
     }
-    
-    
     private static final double EPSILON = 0.000001;
 
-    private boolean calculateThreeCircleIntersection(final double r0, final double r1, final double r2) {
+    private boolean calculateThreeCircleIntersection(double x0, double y0, double r0,
+            double x1, double y1, double r1,
+            double x2, double y2, double r2) {
         double a, dx, dy, d, h, rx, ry;
         double point2_x, point2_y;
-        
-        final double x0 = P1.getX();
-        final double y0 = P1.getY(); 
-        final double x1 = P2.getX();
-        final double y1 = P2.getY();
-        final double x2 = P3.getX();
-        final double y2 = P3.getY(); 
-        
+
         /* dx and dy are the vertical and horizontal distances between
          * the first to circle centers.
          */
@@ -180,18 +123,11 @@ public class Device {
 
         if (Math.abs(d1 - r2) < EPSILON) {
             System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: (" + intersectionPoint1_x + "," + intersectionPoint1_y + ")");
-            x = Math.abs(intersectionPoint1_x);
-            y = Math.abs(intersectionPoint1_y);
         } else if (Math.abs(d2 - r2) < EPSILON) {
             System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: (" + intersectionPoint2_x + "," + intersectionPoint2_y + ")"); //here was an error
-            x = Math.abs(intersectionPoint2_x);
-            y = Math.abs(intersectionPoint2_y);
         } else {
             System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: NONE");
-            return false;
         }
-        
         return true;
     }
-    
 }

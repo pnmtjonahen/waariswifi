@@ -46,7 +46,9 @@ public class DeviceTest {
         n.update("18:3d:a2:57:e3:50", 96.875053);
         Assert.assertFalse("First distance Device should not be valid", n.isValid());
         n.update("00:16:0a:26:a7:06", 48.552540);
-        Assert.assertTrue("Second distance Device should be valid", n.isValid());
+        Assert.assertFalse("Second distance Device should not be valid", n.isValid());
+        n.update("ff:ff:ff:ff:ff:ff", 48.552540);
+        Assert.assertFalse("Third distance Device should not be valid", n.isValid());
         
     }
 }

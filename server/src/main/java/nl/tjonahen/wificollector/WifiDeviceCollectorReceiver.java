@@ -51,6 +51,15 @@ public class WifiDeviceCollectorReceiver {
             final String data) 
     {
 
+        processData(endpointMac, deviceMac, data);
+        // TODO: remove when 3 point are available
+        if ("00:16:0a:26:a7:06".equals(endpointMac)) {
+            processData("ff:ff:ff:ff:ff:ff", deviceMac, data);
+        }
+        return Response.ok().build();
+    }
+
+    private void processData(final String endpointMac, final String deviceMac, final String data) {
         final WifiDevicePayload[] devicePayload = triangulation.determineLocation(endpointMac, deviceMac, data);
         
         if (devicePayload != null) {
@@ -58,8 +67,6 @@ public class WifiDeviceCollectorReceiver {
                 wsEvent.fire(p);
             }
         }
-        
-        return Response.ok().build();
     }
     
 

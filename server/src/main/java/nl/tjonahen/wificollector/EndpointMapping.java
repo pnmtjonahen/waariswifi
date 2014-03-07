@@ -22,9 +22,10 @@ package nl.tjonahen.wificollector;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class EndpointMapping {
-    private final EndpointDevice P1 = new EndpointDevice("18:3d:a2:57:e3:50", 0, 0);
-    private final EndpointDevice P2 = new EndpointDevice("00:16:0a:26:a7:06", 3.2, 0);
-    private final EndpointDevice P3 = new EndpointDevice("unknown", Double.NaN, Double.NaN);
+    // fixed locations
+    private final EndpointDevice P1 = new EndpointDevice("18:3d:a2:57:e3:50", 0.0, 0.0);
+    private final EndpointDevice P2 = new EndpointDevice("00:16:0a:26:a7:06", 3.0, 0.0);
+    private final EndpointDevice P3 = new EndpointDevice("ff:ff:ff:ff:ff:ff", 0.0, 3.0);
     private double p1p3;
     private double p2p3;
     
