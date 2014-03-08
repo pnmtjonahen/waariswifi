@@ -80,7 +80,9 @@ public class Device {
 //        y = c * Math.sin(Math.toRadians( B ));
 //        x = Math.sqrt(Math.pow(c, 2) - Math.pow(y, 2));
         
-        valid = calculateThreeCircleIntersection(distanceToP1, distanceToP2, distanceToP3);
+//        valid = calculateThreeCircleIntersection(distanceToP1, distanceToP2, distanceToP3);
+        circleCircleIntersection();
+        valid = isXValid() && isYValid();
     }
 
     public double getX() {
@@ -105,7 +107,10 @@ public class Device {
     
     
     private static final double EPSILON = 0.000001;
-
+    
+ /**
+  *  http://stackoverflow.com/questions/19723641/find-intersecting-point-of-three-circles-programmatically
+  */
     private boolean calculateThreeCircleIntersection(final double r0, final double r1, final double r2) {
         double a, dx, dy, d, h, rx, ry;
         double point2_x, point2_y;
@@ -195,5 +200,21 @@ public class Device {
         
         return true;
     }
+/**
+ * http://mathworld.wolfram.com/Circle-CircleIntersection.html
+ */
+    private void circleCircleIntersection() {
+        double r = distanceToP2;
+        double R = distanceToP1;
+        double d = P2.getX();
+        
+        x = Math.pow(d, 2) - Math.pow(r, 2) + Math.pow(R, 2) / (2 * d);
+        
+        double k = Math.pow(d, 2) - Math.pow(r,2)  + Math.pow(R,2);
+        y = (4 * Math.pow(d, 2) * Math.pow(R, 2) - Math.pow(k, 2)) / (4 * Math.pow(d, 2));
+        
+        
+    }
+        
     
 }
