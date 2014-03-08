@@ -31,7 +31,8 @@ public class Triangulation {
     @Inject 
     private MacNameResolver macNameResolver;
     
-    private final EndpointMapping endpointMapping = new EndpointMapping();
+    @Inject
+    private EndpointMapping endpointMapping;
     
 
     private final Map<String, Device> nodeMap;

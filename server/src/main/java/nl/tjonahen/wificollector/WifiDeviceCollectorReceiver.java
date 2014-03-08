@@ -41,6 +41,8 @@ public class WifiDeviceCollectorReceiver {
     @Inject 
     private Triangulation triangulation;
 
+    @Inject
+    private EndpointMapping endpointMapping; 
     
     @POST
     @Path("/{endpointmac}/{devicemac}/")
@@ -52,10 +54,6 @@ public class WifiDeviceCollectorReceiver {
     {
 
         processData(endpointMac, deviceMac, data);
-        // TODO: remove when 3 point are available
-        if ("00:16:0a:26:a7:06".equals(endpointMac)) {
-            processData("ff:ff:ff:ff:ff:ff", deviceMac, data);
-        }
         return Response.ok().build();
     }
 
@@ -74,16 +72,39 @@ public class WifiDeviceCollectorReceiver {
     @GET
     @Path("/{endpointmac}/")
     public String processGet(@PathParam(value = "endpointmac") final String endpointMac) {
-        wsEvent.fire(newWifiDevicePayload("P1", 0, 0));
-        wsEvent.fire(newWifiDevicePayload("P2", 0, 100));
-        wsEvent.fire(newWifiDevicePayload("P3", 100, 0));
-        wsEvent.fire(newWifiDevicePayload("P4", -100, 0));
-        wsEvent.fire(newWifiDevicePayload("P5", 0, -100));
+        if (endpointMapping.getP1().isEndpoint(endpointMac)) {
+            return endPointToJson("P1", endpointMapping.getP1());
+        }
+        if (endpointMapping.getP2().isEndpoint(endpointMac)) {
+            return endPointToJson("P2", endpointMapping.getP2());
+        }
+        if (endpointMapping.getP3().isEndpoint(endpointMac)) {
+            return endPointToJson("P3", endpointMapping.getP3());
+        }
         
-        return "done....";
+        return "";
+    }
+ 
+    @GET
+    public String processGetRoot() {
+        
+        return String.format("[%s, %s, %s]", 
+                        endPointToJson("P1", endpointMapping.getP1()), 
+                        endPointToJson("P2", endpointMapping.getP2()), 
+                        endPointToJson("P3", endpointMapping.getP3()));
     }
     
     private WifiDevicePayload newWifiDevicePayload(String name, double x, double y) {
         return new WifiDevicePayload(true, name, x, y, "home", 5);
+    }
+
+    private String endPointToJson(final String name, final EndpointDevice ep) {
+        return String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s}", 
+                                        name, 
+                                        ep.getX(), 
+                                        ep.getY(), 
+                                        ep.getMac(),
+                                        0.0,
+                                        true);
     }
 }

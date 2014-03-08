@@ -17,17 +17,27 @@
 
 package nl.tjonahen.wificollector;
 
+import javax.enterprise.context.ApplicationScoped;
+
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
+@ApplicationScoped
 public class EndpointMapping {
     // fixed locations
-    private final EndpointDevice P1 = new EndpointDevice("18:3d:a2:57:e3:50", 0.0, 0.0);
-    private final EndpointDevice P2 = new EndpointDevice("00:16:0a:26:a7:06", 3.0, 0.0);
-    private final EndpointDevice P3 = new EndpointDevice("ff:ff:ff:ff:ff:ff", 0.0, 3.0);
+    private final EndpointDevice P1;
+    private final EndpointDevice P2;
+    private final EndpointDevice P3;
     private double p1p3;
     private double p2p3;
+
+    public EndpointMapping() {
+        this.P1 = new EndpointDevice("18:3d:a2:57:e3:50", 0.0, 0.0);
+        this.P2 = new EndpointDevice("00:16:0a:26:a7:06", 10.0, 0.0);
+        this.P3 = new EndpointDevice("ff:ff:ff:ff:ff:ff", 0.0, 10.0);
+    }
+    
     
     public void update(final String endpointMac, final String deviceMac, final double distance) {
         if (P1.isEndpoint(endpointMac) && P2.isEndpoint(deviceMac)) {

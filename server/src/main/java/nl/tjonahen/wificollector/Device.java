@@ -168,6 +168,8 @@ public class Device {
         double intersectionPoint2_y = point2_y - ry;
 
         System.out.println("INTERSECTION Circle1 AND Circle2:  (" + intersectionPoint1_x + "," + intersectionPoint1_y + ")" + " AND (" + intersectionPoint2_x + "," + intersectionPoint2_y + ")");
+            x = Math.abs(intersectionPoint1_x);
+            y = Math.abs(intersectionPoint1_y);
 
         /* Lets determine if circle 3 intersects at either of the above intersection points. */
         dx = intersectionPoint1_x - x2;
@@ -188,7 +190,7 @@ public class Device {
             y = Math.abs(intersectionPoint2_y);
         } else {
             System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: NONE");
-            return false;
+//            return false;
         }
         
         return true;
