@@ -58,12 +58,11 @@ public class WifiDeviceCollectorReceiver {
     }
 
     private void processData(final String endpointMac, final String deviceMac, final String data) {
-        final WifiDevicePayload[] devicePayload = triangulation.determineLocation(endpointMac, deviceMac, data);
-        
-        if (devicePayload != null) {
-            for (WifiDevicePayload p : devicePayload) {
-                wsEvent.fire(p);
-            }
+        for (WifiDevicePayload p : triangulation.determineLocation(endpointMac, deviceMac, data)) {
+            wsEvent.fire(p);
+        }
+        for (WifiDevicePayload p : triangulation.getExpiredDevices()) {
+            wsEvent.fire(p);
         }
     }
     

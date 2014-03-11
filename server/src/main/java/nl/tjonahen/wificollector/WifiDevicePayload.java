@@ -43,6 +43,7 @@ public class WifiDevicePayload {
     private final String endpointMac;
     private final double distance;
     private final boolean triangulated;
+    private final boolean expired;
 
     public WifiDevicePayload(final boolean triangulated, 
                              final String deviceMac, 
@@ -56,6 +57,17 @@ public class WifiDevicePayload {
         this.distance = distance;
         this.triangulated = triangulated;
         this.endpointMac = endpointMac;
+        this.expired = false;
+    }
+    
+    public WifiDevicePayload(final String deviceMac) {
+        this.deviceMac = deviceMac;
+        this.x = 0;
+        this.y = 0;
+        this.distance = 0;
+        this.triangulated = false;
+        this.endpointMac = "";
+        this.expired = true;
     }
 
     public String getDeviceMac() {
@@ -80,6 +92,10 @@ public class WifiDevicePayload {
 
     public String getEndpointMac() {
         return endpointMac;
+    }
+
+    public boolean isExpired() {
+        return expired;
     }
     
     

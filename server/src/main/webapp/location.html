@@ -39,6 +39,8 @@
                             current.distance = n.distance;
                             current.x = woffset + (n.x*scale); 
                             current.y = hoffset - (n.y*scale); 
+                            current.px = woffset + (n.x*scale); 
+                            current.py = hoffset - (n.y*scale); 
                         } else {
                             message("add node " + n.device);
                             nodes.push({"id": n.device, "x":woffset + (n.x*scale), "y":hoffset - (n.y*scale), "distance":n.distance, "fixed":true});
@@ -175,7 +177,11 @@
                             socket.onmessage = function(msg) {
                                 var obj = JSON.parse(msg.data);
                                 message('<p class="message">Received: ' + obj.device + "(" + obj.x +","+ obj.y + ")");
-                                graph.addNode(obj);
+                                if (obj.expired === true) {
+                                    graph.removeNode(obj.device);
+                                } else {
+                                    graph.addNode(obj);
+                                }
                             }
 
                             socket.onclose = function() {

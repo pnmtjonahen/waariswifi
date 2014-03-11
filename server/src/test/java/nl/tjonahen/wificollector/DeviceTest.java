@@ -17,6 +17,8 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.calculator.CircleIntersectionCalculator;
+import nl.tjonahen.wificollector.calculator.ThreeCircleIntersectionCalculator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,8 +31,7 @@ public class DeviceTest {
     
     @Test
     public void testValid() {
-        final EndpointMapping endpointMapping = new EndpointMapping();
-        final Device n = Device.create(endpointMapping.getP1(), endpointMapping.getP2(), endpointMapping.getP3());
+        final Device n = new Device(new EndpointMapping(), null);
         
         Assert.assertFalse("New Device should not be valid", n.isValid());
         
@@ -38,10 +39,9 @@ public class DeviceTest {
     
     @Test
     public void testCalc() {
-        //Info:   {"device":"34:51:c9:4c:6e:9e", "x":"NaN", "y":"NaN", "endpoint":"18:3d:a2:57:e3:50", "distance":"96.875053", "triangulated":false}
+//Info:   {"device":"34:51:c9:4c:6e:9e", "x":"NaN", "y":"NaN", "endpoint":"18:3d:a2:57:e3:50", "distance":"96.875053", "triangulated":false}
 //Info:   {"device":"34:51:c9:4c:6e:9e", "x":"NaN", "y":"NaN", "endpoint":"00:16:0a:26:a7:06", "distance":"48.552540", "triangulated":false}
-        final EndpointMapping endpointMapping = new EndpointMapping();
-        final Device n = Device.create(endpointMapping.getP1(), endpointMapping.getP2(), endpointMapping.getP3());
+        final Device n = new Device(new EndpointMapping(), new ThreeCircleIntersectionCalculator());
 
         n.update("18:3d:a2:57:e3:50", 96.875053);
         Assert.assertFalse("First distance Device should not be valid", n.isValid());

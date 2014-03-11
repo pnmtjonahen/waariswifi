@@ -34,8 +34,8 @@ public class EndpointMapping {
 
     public EndpointMapping() {
         this.P1 = new EndpointDevice("18:3d:a2:57:e3:50", 0.0, 0.0);
-        this.P2 = new EndpointDevice("00:16:0a:26:a7:06", 10.0, 0.0);
-        this.P3 = new EndpointDevice("ff:ff:ff:ff:ff:ff", 0.0, 10.0);
+        this.P2 = new EndpointDevice("00:16:0a:26:a7:06", 3.0, 0.0);
+        this.P3 = new EndpointDevice("ff:ff:ff:ff:ff:ff", 0.0, 3.0);
     }
     
     
