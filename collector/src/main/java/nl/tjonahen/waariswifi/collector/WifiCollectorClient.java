@@ -40,6 +40,10 @@ public class WifiCollectorClient {
     public void process(final String line) {
 
         final String[] fields = line.split("\t");
+        if (fields.length != 4) {
+            System.out.println("TShark reports " + line);
+            return;
+        }
         final String timestamp = fields[0];
         final String devicemac = fields[1];
         final String db = fields[2];
