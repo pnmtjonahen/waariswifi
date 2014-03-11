@@ -18,7 +18,6 @@
 package nl.tjonahen.wificollector;
 
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
-import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.calculator.Calculator;
 import nl.tjonahen.wificollector.calculator.Point;
 import org.joda.time.DateTime;
@@ -41,12 +40,14 @@ public class Device {
     
     private final Calculator calculator;
     private final EndpointMapping endpointMapping;
+    private final String name;
     
     private DateTime lastupdated;
     
-    public Device(final EndpointMapping endpointMapping, final Calculator calculator) {
+    public Device(final String name, final EndpointMapping endpointMapping, final Calculator calculator) {
         this.endpointMapping = endpointMapping;
         this.calculator = calculator;
+        this.name = name;
         lastupdated = DateTime.now();
     }
 
@@ -63,7 +64,9 @@ public class Device {
     }
 
     private void recalculate() {
-        System.out.println(String.format("%f,%f,%f,%f,%f,%f,%f,%f,%f", this.endpointMapping.getP1().getX(),
+        System.out.println(String.format("%s, %f,%f,%f,%f,%f,%f,%f,%f,%f", 
+                this.name,
+                this.endpointMapping.getP1().getX(),
                 this.endpointMapping.getP1().getY(),
                 this.distanceToP1,
                 this.endpointMapping.getP2().getX(),

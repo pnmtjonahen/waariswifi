@@ -25,7 +25,7 @@ import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class DeviceFactory {
-    public static Device create(final EndpointMapping endpointMapping) {
-        return new Device(endpointMapping,new ThreeCircleIntersectionCalculator());
+    public static Device create(final String name, final EndpointMapping endpointMapping) {
+        return new Device(name, endpointMapping,new ThreeCircleIntersectionCalculator());
     }
 }

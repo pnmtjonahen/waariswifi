@@ -78,7 +78,7 @@ public class Triangulation {
     private List<WifiDevicePayload> processNewDevice(final String endpointMac, final String deviceMac, final double distance) {
         final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
         final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
-        final Device n = DeviceFactory.create(endpointMapping);
+        final Device n = DeviceFactory.create(deviceMac, endpointMapping);
         n.update(endpointMac, distance);
         nodeMap.put(deviceMac, n);
 
