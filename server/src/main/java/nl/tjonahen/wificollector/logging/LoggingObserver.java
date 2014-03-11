@@ -15,10 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.tjonahen.wificollector;
+package nl.tjonahen.wificollector.logging;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import nl.tjonahen.wificollector.WifiDevicePayload;
 
 /**
  *
