@@ -118,7 +118,9 @@ public class Device {
     }
     
     public boolean expired() {
-        return Minutes.minutesBetween(lastupdated, DateTime.now()).getMinutes() > 5;
+        int minutes = Minutes.minutesBetween(lastupdated, DateTime.now()).getMinutes();
+        System.out.println("age:" + minutes);
+        return minutes > 5;
     }
         
     

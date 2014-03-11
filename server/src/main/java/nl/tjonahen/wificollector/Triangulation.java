@@ -99,12 +99,19 @@ public class Triangulation {
     public List<WifiDevicePayload> getExpiredDevices() {
         final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
         
+        final List<String> removed = new ArrayList<String>();
+        
         for (Entry<String, Device> entry : nodeMap.entrySet() ) {
              if (entry.getValue().expired()) {
-                 result.add(new WifiDevicePayload(entry.getKey()));
+                 removed.add(entry.getKey());
              }   
-             nodeMap.remove(entry.getKey());
         }
+        
+        for (String key: removed) {
+            result.add(new WifiDevicePayload(key));
+            nodeMap.remove(key);
+        }
+        System.out.println("Found expired nodes " + result.size());
         return result;
     }
 }
