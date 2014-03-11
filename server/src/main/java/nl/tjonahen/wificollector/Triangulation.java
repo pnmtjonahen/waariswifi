@@ -111,7 +111,6 @@ public class Triangulation {
             result.add(new WifiDevicePayload(key));
             nodeMap.remove(key);
         }
-        System.out.println("Found expired nodes " + result.size());
         return result;
     }
 }
