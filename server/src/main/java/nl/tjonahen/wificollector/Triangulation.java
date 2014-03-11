@@ -27,6 +27,8 @@ import javax.inject.Inject;
 
 /**
  *
+ * Handles the trilangulation of device nodes and enpoints.
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 @ApplicationScoped
@@ -48,46 +50,62 @@ public class Triangulation {
         nodeMap = new TreeMap<>();
     }
     
+    /**
+     * Determines the location of a device. If the device was one of the endpoints a new endpoint collection is returned
+     * @param endpointMac -
+     * @param deviceMac -
+     * @param data -
+     * @return collection of WifiDevicePayloads
+     */
     public List<WifiDevicePayload> determineLocation(final String endpointMac, final String deviceMac, final String data) {
-        final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
+        
         final String[] fields = data.split(":");
         final double distance = calculateDistance(Math.abs(Double.valueOf(fields[1])), Double.valueOf(fields[2]));
         
         if (endpointMapping.getP1().isEndpoint(endpointMac) && endpointMapping.getP2().isEndpoint(deviceMac)) {
-            endpointMapping.update(endpointMac, deviceMac, distance);
-            
-            result.add(new WifiDevicePayload(true, "P1", 
-                            endpointMapping.getP1().getX(), endpointMapping.getP1().getY(), "P1", 0));
-            result.add(new WifiDevicePayload(true, "P2", 
-                            endpointMapping.getP2().getX(), endpointMapping.getP2().getX(), "P2", 0));
-            result.add(new WifiDevicePayload(true, "P3", 
-                            endpointMapping.getP3().getX(), endpointMapping.getP3().getX(), "P3", 0));
-                                    
-            
-            return result;
-        } else {
-            final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
-            if (nodeMap.containsKey(deviceMac)) {
-                final Device n = nodeMap.get(deviceMac);
-                n.update(endpointMac, distance);
-                result.add(new WifiDevicePayload(n.isValid(), name, n.getX(), n.getY(), endpointMac, distance));
-                
-                return result;
-            }
-            final Device n = DeviceFactory.create(endpointMapping);
-            n.update(endpointMac, distance);
-            nodeMap.put(deviceMac, n);
-            
-            result.add(new WifiDevicePayload(false, 
-                                                name, 
-                                                0, 
-                                                0, 
-                                                endpointMac, 
-                                                distance));
-            return result;
+            return processEndpointData(endpointMac, deviceMac, distance);
         }
         
+        if (nodeMap.containsKey(deviceMac)) {
+            return processDeviceUpdate(endpointMac, deviceMac, distance);
+        }
+
+        return processNewDevice(endpointMac, deviceMac, distance);
+    }
+
+    private List<WifiDevicePayload> processNewDevice(final String endpointMac, final String deviceMac, final double distance) {
+        final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
+        final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
+        final Device n = DeviceFactory.create(endpointMapping);
+        n.update(endpointMac, distance);
+        nodeMap.put(deviceMac, n);
+
+        result.add(new WifiDevicePayload(false, name, 0, 0, endpointMac,  distance));
+        return result;
+    }
+
+    private List<WifiDevicePayload> processDeviceUpdate(final String endpointMac, final String deviceMac, final double distance) {
+        final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
+        final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
+        final Device n = nodeMap.get(deviceMac);
+        n.update(endpointMac, distance);
+        result.add(new WifiDevicePayload(n.isValid(), name, n.getX(), n.getY(), endpointMac, distance));
+        return result;
+    }
+
+    private List<WifiDevicePayload> processEndpointData(final String endpointMac, final String deviceMac, final double distance) {
+        final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
+        endpointMapping.update(endpointMac, deviceMac, distance);
         
+        result.add(new WifiDevicePayload(true, "P1",
+                endpointMapping.getP1().getX(), endpointMapping.getP1().getY(), "P1", 0));
+        result.add(new WifiDevicePayload(true, "P2",
+                endpointMapping.getP2().getX(), endpointMapping.getP2().getX(), "P2", 0));
+        result.add(new WifiDevicePayload(true, "P3",
+                endpointMapping.getP3().getX(), endpointMapping.getP3().getX(), "P3", 0));
+        
+        
+        return result;
     }
     
     
@@ -96,6 +114,10 @@ public class Triangulation {
        return Math.pow(10.0, exp);
     } 
 
+    /**
+     * 
+     * @return list of wifidevicepayloads for nodes that are expired (no update for 5 minutes). 
+     */
     public List<WifiDevicePayload> getExpiredDevices() {
         final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
         

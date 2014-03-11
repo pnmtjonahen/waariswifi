@@ -24,5 +24,10 @@ import nl.tjonahen.wificollector.Device;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public interface Calculator {
+    /**
+     * Perform the location recalculation. All parameters are embedded within the device.
+     * 
+     * @param device -
+     */
     void recalculate(final Device device);
 }

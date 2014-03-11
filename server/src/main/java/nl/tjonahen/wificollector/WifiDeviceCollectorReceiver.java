@@ -29,7 +29,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- *
+ * Main entry pint for receiving enpoint data. This is called by the collector application to process captured data.
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 @ApplicationScoped
@@ -43,7 +44,14 @@ public class WifiDeviceCollectorReceiver {
 
     @Inject
     private EndpointMapping endpointMapping; 
-    
+
+    /**
+     * Handles the processing of the captured data.
+     * @param endpointMac capturing endpoint
+     * @param deviceMac device
+     * @param data data
+     * @return HTTP 200
+     */
     @POST
     @Path("/{endpointmac}/{devicemac}/")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -53,19 +61,15 @@ public class WifiDeviceCollectorReceiver {
             final String data) 
     {
 
-        processData(endpointMac, deviceMac, data);
-        return Response.ok().build();
-    }
-
-    private void processData(final String endpointMac, final String deviceMac, final String data) {
         for (WifiDevicePayload p : triangulation.determineLocation(endpointMac, deviceMac, data)) {
             wsEvent.fire(p);
         }
         for (WifiDevicePayload p : triangulation.getExpiredDevices()) {
             wsEvent.fire(p);
         }
+        return Response.ok().build();
     }
-    
+
 
     
     @GET
@@ -93,10 +97,6 @@ public class WifiDeviceCollectorReceiver {
                         endPointToJson("P3", endpointMapping.getP3()));
     }
     
-    private WifiDevicePayload newWifiDevicePayload(String name, double x, double y) {
-        return new WifiDevicePayload(true, name, x, y, "home", 5);
-    }
-
     private String endPointToJson(final String name, final EndpointDevice ep) {
         return String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s}", 
                                         name, 

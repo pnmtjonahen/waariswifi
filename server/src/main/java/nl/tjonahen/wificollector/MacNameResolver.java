@@ -17,8 +17,10 @@
 
 package nl.tjonahen.wificollector;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 
 /**
@@ -28,29 +30,22 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class MacNameResolver {
 
-    private final Map<String, String> resolve;
+    private final Properties resolve;
 
     public MacNameResolver() {
-        this.resolve = new TreeMap<>();
-        resolve.put("78:92:9c:22:cd:6a","PC(Kay)");
-        resolve.put("94:db:c9:b7:f9:a2","PC(Amber)");
-        resolve.put("00:16:0a:26:a7:06","PC(Huiskamer)");
-        resolve.put("f0:08:f1:8e:3e:95","Telefoon1(Mijn)");
-        resolve.put("50:46:5d:16:8a:69","Tablet1(Mijn)");
-        resolve.put("00:26:ab:0b:cd:91","Printer1");
-        resolve.put("84:25:db:e4:a3:A0","Telefoon2");
-        resolve.put("18:3d:a2:57:e3:50","PC4");
-        resolve.put("d0:51:62:29:f3:84","Telefoon3");
-        resolve.put("2c:cc:15:22:25:54","Telefoon4");
-        resolve.put("00:0d:f0:58:93:2c","PC5");
-        resolve.put("00:24:d6:72:e1:74","PC6");
-        resolve.put("00:0c:f6:be:cb:c3", "Pi 1");
+        
+        this.resolve = new Properties();
+        try {
+            this.resolve.load(this.getClass().getResourceAsStream("/macnameresolver.properties"));
+        } catch (IOException ex) {
+            Logger.getLogger(MacNameResolver.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     
     public String resolve(final String deviceMac) {
         if (resolve.containsKey(deviceMac.toLowerCase())) {
-            return resolve.get(deviceMac.toLowerCase());
+            return resolve.getProperty(deviceMac.toLowerCase());
         }
         return deviceMac;
     }
