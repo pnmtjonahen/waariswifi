@@ -26,13 +26,14 @@ import javax.enterprise.event.Observes;
  */
 @ApplicationScoped
 public class LoggingObserver {
-        public void onJMSMessage(@Observes WifiDevicePayload msg) {
-            System.out.println(String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s}", 
+        public void onMessage(@Observes WifiDevicePayload msg) {
+            System.out.println(String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s, \"expired\":%s}", 
                                         msg.getDeviceMac(), 
                                         msg.getX(), 
                                         msg.getY(), 
                                         msg.getEndpointMac(),
                                         msg.getDistance(),
-                                        msg.isTriangulated()));
+                                        msg.isTriangulated(),
+                                        msg.isExpired()));
         }
 }

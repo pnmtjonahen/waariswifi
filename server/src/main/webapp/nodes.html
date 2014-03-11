@@ -143,8 +143,8 @@
                 }
 
                 // set up the D3 visualisation in the specified element
-                var w = 1024,
-                        h = 700;
+                var w = $(window).width() - 10,
+                        h = $(window).height() - 10;
                 var fixednode = new Node("P", 0);
                 
                 this.addFixedNode = function () {
@@ -189,10 +189,10 @@
                             .call(force.drag);
                     nodeEnter.append("circle")
                             .attr("r", 1);
-                    nodeEnter.append("text")
-                            .attr("x", 10)
-                            .attr("dy", ".35em")
-                            .text("undefined");
+//                    nodeEnter.append("text")
+//                            .attr("x", 10)
+//                            .attr("dy", ".35em")
+//                            .text("undefined");
 
                     node.exit().remove();
                     
@@ -208,11 +208,11 @@
                                 .style("fill", function() {
                                     return d.color();
                                 });
-                        single.selectAll("text")
-                                .transition()
-                                .text(function() {
-                                    return d.name();
-                                });
+//                        single.selectAll("text")
+//                                .transition()
+//                                .text(function() {
+//                                    return d.name();
+//                                });
                     });
                     
                     force.on("tick", function() {
@@ -260,8 +260,11 @@
                             socket.onmessage = function(msg) {
                                 var obj = JSON.parse(msg.data);
                                 message('<p class="message">Received: ' + obj.device + ", " + obj.distance);
-
-                                graph.addNode(obj.device, obj.distance);
+                                if (obj.expired === true) {
+                                    graph.removeNode(obj.device);
+                                } else {   
+                                    graph.addNode(obj.device, obj.distance);
+                                }
                             }
 
                             socket.onclose = function() {
@@ -290,8 +293,7 @@
                         }
 
                         function message(msg) {
-                            $('#latest').empty();
-                            $('#latest').append(msg + '</p>');
+                            console.log(msg);
                         }
                     }//End connect
                     connect();
@@ -300,6 +302,5 @@
 
             });
         </script>
-        <div id="latest"></div>  
     </body>
 </html>
