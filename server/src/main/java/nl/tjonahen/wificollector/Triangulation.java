@@ -17,6 +17,7 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.devicenameing.MacNameResolver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.tjonahen.wificollector;
+package nl.tjonahen.wificollector.devicenameing;
 
 import java.io.IOException;
 import java.util.Properties;
