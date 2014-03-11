@@ -94,7 +94,7 @@ public class ThreeCircleIntersectionCalculator  implements Calculator {
         double intersectionPoint1_y = point2_y + ry;
         double intersectionPoint2_y = point2_y - ry;
 
-        System.out.println("INTERSECTION Circle1 AND Circle2:  (" + intersectionPoint1_x + "," + intersectionPoint1_y + ")" + " AND (" + intersectionPoint2_x + "," + intersectionPoint2_y + ")");
+//        System.out.println("INTERSECTION Circle1 AND Circle2:  (" + intersectionPoint1_x + "," + intersectionPoint1_y + ")" + " AND (" + intersectionPoint2_x + "," + intersectionPoint2_y + ")");
         x = Math.abs(intersectionPoint1_x);
         y = Math.abs(intersectionPoint1_y);
 
