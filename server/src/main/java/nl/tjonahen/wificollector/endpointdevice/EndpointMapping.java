@@ -17,10 +17,14 @@
 
 package nl.tjonahen.wificollector.endpointdevice;
 
+import java.io.IOException;
+import java.util.Properties;
 import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
+ * Fixed locations and mac adresses are loaded from a property file
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 @ApplicationScoped
@@ -32,10 +36,16 @@ public class EndpointMapping {
     private double p1p3;
     private double p2p3;
 
-    public EndpointMapping() {
-        this.P1 = new EndpointDevice("18:3d:a2:57:e3:50", 0.0, 0.0);
-        this.P2 = new EndpointDevice("00:16:0a:26:a7:06", 3.0, 0.0);
-        this.P3 = new EndpointDevice("ff:ff:ff:ff:ff:ff", 0.0, 3.0);
+    public EndpointMapping() throws IOException {
+        final Properties property = new Properties();
+        property.load(this.getClass().getResourceAsStream("/endpointmapping.properties"));
+        this.P1 = new EndpointDevice(property.getProperty("P1.mac"), 
+                Double.valueOf(property.getProperty("P1.x")), Double.valueOf(property.getProperty("P1.y")));
+        this.P2 = new EndpointDevice(property.getProperty("P2.mac"),
+                Double.valueOf(property.getProperty("P2.x")), Double.valueOf(property.getProperty("P2.y")));
+        this.P3 = new EndpointDevice(property.getProperty("P3.mac"),
+                Double.valueOf(property.getProperty("P3.x")), Double.valueOf(property.getProperty("P3.y")));
+
     }
     
     
