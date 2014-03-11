@@ -17,6 +17,7 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import org.junit.Assert;
 import org.junit.Test;
 

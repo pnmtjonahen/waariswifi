@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.tjonahen.wificollector;
+package nl.tjonahen.wificollector.endpointdevice;
 
 import javax.enterprise.context.ApplicationScoped;
 

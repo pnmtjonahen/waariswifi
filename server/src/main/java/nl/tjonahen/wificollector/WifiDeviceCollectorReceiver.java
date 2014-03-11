@@ -17,6 +17,8 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
+import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;

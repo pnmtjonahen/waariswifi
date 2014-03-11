@@ -17,6 +17,7 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.calculator.CircleIntersectionCalculator;
 import nl.tjonahen.wificollector.calculator.ThreeCircleIntersectionCalculator;
 import org.junit.Assert;

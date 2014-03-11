@@ -17,6 +17,7 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.calculator.SinanCalculator;
 
 /**

@@ -17,6 +17,8 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
+import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.calculator.Calculator;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;

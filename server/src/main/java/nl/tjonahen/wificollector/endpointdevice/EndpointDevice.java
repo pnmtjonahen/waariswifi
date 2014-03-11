@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.tjonahen.wificollector;
+package nl.tjonahen.wificollector.endpointdevice;
 
 /**
  *
@@ -44,7 +44,7 @@ public class EndpointDevice {
         return y;
     }
 
-    boolean isEndpoint(final String endpointmac) {
+    public boolean isEndpoint(final String endpointmac) {
         return mac.equals(endpointmac);
     }
 
