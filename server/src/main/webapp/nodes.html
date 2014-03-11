@@ -238,8 +238,7 @@
                 graph.addFixedNode()
                 
                 if (!("WebSocket" in window)) {
-                    $('#chatLog, input, button, #examples').fadeOut("fast");
-                    $('<p>Oh no, you need a browser that supports WebSockets. How about <a href="http://www.google.com/chrome">Google Chrome</a>?</p>').appendTo('#container');
+                    $('<p>Oh no, you need a browser that supports WebSockets. How about <a href="http://www.google.com/chrome">Google Chrome</a>?</p>').appendTo('body');
                 } else {
                     //The user has WebSockets
 
@@ -251,15 +250,15 @@
                         try {
                             var socket = new WebSocket(host);
 
-                            message('<p class="event">Socket Status: ' + socket.readyState);
+                            message('Socket Status: ' + socket.readyState);
 
                             socket.onopen = function() {
-                                message('<p class="event">Socket Status: ' + socket.readyState + ' (open) ' + host);
+                                message('Socket Status: ' + socket.readyState + ' (open) ' + host);
                             }
 
                             socket.onmessage = function(msg) {
                                 var obj = JSON.parse(msg.data);
-                                message('<p class="message">Received: ' + obj.device + ", " + obj.distance);
+                                message('Received: ' + obj.device + ", " + obj.distance);
                                 if (obj.expired === true) {
                                     graph.removeNode(obj.device);
                                 } else {   
@@ -268,28 +267,11 @@
                             }
 
                             socket.onclose = function() {
-                                message('<p class="event">Socket Status: ' + socket.readyState + ' (Closed)');
+                                message('Socket Status: ' + socket.readyState + ' (Closed)');
                             }
 
                         } catch (exception) {
-                            message('<p>Error' + exception);
-                        }
-
-                        function send() {
-                            var text = $('#text').val();
-
-                            if (text == "") {
-                                message('<p class="warning">Please enter a message');
-                                return;
-                            }
-                            try {
-                                socket.send(text);
-                                message('<p class="event">Sent: ' + text)
-
-                            } catch (exception) {
-                                message('<p class="warning">');
-                            }
-                            $('#text').val("");
+                            message('Error' + exception);
                         }
 
                         function message(msg) {
