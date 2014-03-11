@@ -20,6 +20,7 @@ package nl.tjonahen.wificollector;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.calculator.Calculator;
+import nl.tjonahen.wificollector.calculator.Point;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
@@ -34,8 +35,7 @@ public class Device {
     private double distanceToP3 = 0;
     
 
-    private double x = Double.NaN;
-    private double y = Double.NaN;
+    private Point p = new Point(Double.NaN, Double.NaN);
     
     private boolean valid;
     
@@ -63,61 +63,39 @@ public class Device {
     }
 
     private void recalculate() {
-        calculator.recalculate(this);
-        valid = isXValid() && isYValid();
+        System.out.println(String.format("%f,%f,%f,%f,%f,%f,%f,%f,%f", this.endpointMapping.getP1().getX(),
+                this.endpointMapping.getP1().getY(),
+                this.distanceToP1,
+                this.endpointMapping.getP2().getX(),
+                this.endpointMapping.getP2().getY(),
+                this.distanceToP2,
+                this.endpointMapping.getP3().getX(),
+                this.endpointMapping.getP3().getY(),
+                this.distanceToP3));
+        p = calculator.recalculate(
+                this.endpointMapping.getP1().getX(),
+                this.endpointMapping.getP1().getY(),
+                this.distanceToP1,
+                this.endpointMapping.getP2().getX(),
+                this.endpointMapping.getP2().getY(),
+                this.distanceToP2,
+                this.endpointMapping.getP3().getX(),
+                this.endpointMapping.getP3().getY(),
+                this.distanceToP3);
     }
 
     public double getX() {
-        return x;
+        return p.getX();
     }
 
     public double getY() {
-        return y;
+        return p.getY();
     }
             
     public boolean isValid() {
-        return valid;
+        return p.isValid();
     }
 
-    private boolean isYValid() {
-        return !Double.isNaN(y);
-    }
-
-    private boolean isXValid() {
-        return !Double.isNaN(x);
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getDistanceToP1() {
-        return distanceToP1;
-    }
-
-    public double getDistanceToP2() {
-        return distanceToP2;
-    }
-
-    public double getDistanceToP3() {
-        return distanceToP3;
-    }
-
-    public EndpointDevice getP1() {
-        return endpointMapping.getP1();
-    }
-
-    public EndpointDevice getP2() {
-        return endpointMapping.getP2();
-    }
-
-    public EndpointDevice getP3() {
-        return endpointMapping.getP3();
-    }
     
     public boolean expired() {
         int minutes = Minutes.minutesBetween(lastupdated, DateTime.now()).getMinutes();

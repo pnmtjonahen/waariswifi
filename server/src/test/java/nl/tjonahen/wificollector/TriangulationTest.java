@@ -17,6 +17,7 @@
 
 package nl.tjonahen.wificollector;
 
+import java.io.IOException;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import java.util.List;
 import org.junit.Assert;
@@ -29,7 +30,7 @@ import org.junit.Test;
 
 public class TriangulationTest {
     @Test
-    public void testCalcDistance() {
+    public void testCalcDistance() throws IOException {
         final Triangulation triangulate = new Triangulation();
         triangulate.setEndpointMapping(new EndpointMapping());
         
@@ -39,7 +40,7 @@ public class TriangulationTest {
     }
     
     @Test 
-    public void determineLocation() {
+    public void determineLocation() throws IOException {
         final String p1 = "18:3d:a2:57:e3:50";
         final String p2 = "00:16:0a:26:a7:06";
         final String p3 = "84:51:81:a7:44:47";

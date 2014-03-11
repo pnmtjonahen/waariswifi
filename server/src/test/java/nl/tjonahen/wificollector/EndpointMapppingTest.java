@@ -17,6 +17,7 @@
 
 package nl.tjonahen.wificollector;
 
+import java.io.IOException;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +29,7 @@ import org.junit.Test;
 public class EndpointMapppingTest {
     
     @Test
-    public void testMapping() {
+    public void testMapping() throws IOException {
         final EndpointMapping endpointMapping = new EndpointMapping();
      
         // zet P1,P2, P3 zodat we een geleikzijdige driehoek krijgen alle hoeken zijn dan 60 graden

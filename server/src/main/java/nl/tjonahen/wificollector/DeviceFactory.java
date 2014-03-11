@@ -17,8 +17,8 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.calculator.ThreeCircleIntersectionCalculator;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
-import nl.tjonahen.wificollector.calculator.SinanCalculator;
 
 /**
  *
@@ -26,6 +26,6 @@ import nl.tjonahen.wificollector.calculator.SinanCalculator;
  */
 public class DeviceFactory {
     public static Device create(final EndpointMapping endpointMapping) {
-        return new Device(endpointMapping,new SinanCalculator());
+        return new Device(endpointMapping,new ThreeCircleIntersectionCalculator());
     }
 }

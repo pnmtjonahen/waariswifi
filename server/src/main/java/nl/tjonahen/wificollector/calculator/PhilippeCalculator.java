@@ -17,14 +17,20 @@
 
 package nl.tjonahen.wificollector.calculator;
 
-import nl.tjonahen.wificollector.Device;
-
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class PhilippeCalculator implements Calculator {
-    public void recalculate(final Device device) {
+    public Point recalculate(final double x0,
+        final double y0, 
+        final double r0,
+        final double x1,
+        final double y1,
+        final double r1,
+        final double x2,
+        final double y2,
+        final double r2) {
     /*
                     A
                     /\
@@ -38,9 +44,9 @@ public class PhilippeCalculator implements Calculator {
     P3 = A
     
     */        
-        double a = device.getP2().getX();
-        double b = device.getDistanceToP2();
-        double c = device.getDistanceToP1();
+        double a = x1;
+        double b = r1;
+        double c = r0;
         
         double A = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2))/-(2*b*c)) * 180/Math.PI;
         double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
@@ -49,8 +55,7 @@ public class PhilippeCalculator implements Calculator {
         double y = c * Math.sin(Math.toRadians( B ));
         double x = Math.sqrt(Math.pow(c, 2) - Math.pow(y, 2));
         
-        device.setX(x);
-        device.setY(y);
+        return new Point(x, y);
     }
 
 }

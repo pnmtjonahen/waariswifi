@@ -17,6 +17,7 @@
 
 package nl.tjonahen.wificollector;
 
+import java.io.IOException;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.calculator.CircleIntersectionCalculator;
 import nl.tjonahen.wificollector.calculator.ThreeCircleIntersectionCalculator;
@@ -31,7 +32,7 @@ public class DeviceTest {
  
     
     @Test
-    public void testValid() {
+    public void testValid() throws IOException {
         final Device n = new Device(new EndpointMapping(), null);
         
         Assert.assertFalse("New Device should not be valid", n.isValid());
@@ -39,7 +40,7 @@ public class DeviceTest {
     }
     
     @Test
-    public void testCalc() {
+    public void testCalc() throws IOException {
 //Info:   {"device":"34:51:c9:4c:6e:9e", "x":"NaN", "y":"NaN", "endpoint":"18:3d:a2:57:e3:50", "distance":"96.875053", "triangulated":false}
 //Info:   {"device":"34:51:c9:4c:6e:9e", "x":"NaN", "y":"NaN", "endpoint":"00:16:0a:26:a7:06", "distance":"48.552540", "triangulated":false}
         final Device n = new Device(new EndpointMapping(), new ThreeCircleIntersectionCalculator());

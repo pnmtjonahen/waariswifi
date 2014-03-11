@@ -28,20 +28,21 @@ public class ThreeCircleIntersectionCalculator  implements Calculator {
  /**
   *  http://stackoverflow.com/questions/19723641/find-intersecting-point-of-three-circles-programmatically
   */
-    public void recalculate(final Device device) {
+    public Point recalculate(
+        final double x0,
+        final double y0, 
+        final double r0,
+        final double x1,
+        final double y1,
+        final double r1,
+        final double x2,
+        final double y2,
+        final double r2)
+    {
 
-        double a, dx, dy, d, h, rx, ry;
+        double a, dx, dy, d, h, rx, ry, x, y;
         double point2_x, point2_y;
         
-        final double x0 = device.getP1().getX();
-        final double y0 = device.getP1().getY(); 
-        final double x1 = device.getP2().getX();
-        final double y1 = device.getP2().getY();
-        final double x2 = device.getP3().getX();
-        final double y2 = device.getP3().getY();
-        final double r0 = device.getDistanceToP1();
-        final double r1 = device.getDistanceToP2();
-        final double r2 = device.getDistanceToP3();
         
         /* dx and dy are the vertical and horizontal distances between
          * the first to circle centers.
@@ -54,14 +55,14 @@ public class ThreeCircleIntersectionCalculator  implements Calculator {
 
         /* Check for solvability. */
         if (d > (r0 + r1)) {
-            System.out.println("INTERSECTION Circle1 AND Circle2 : Do not intersect");
+//            System.out.println("INTERSECTION Circle1 AND Circle2 : Do not intersect");
             /* no solution. circles do not intersect. */
-            return ;
+            return new Point(Double.NaN, Double.NaN);
         }
         if (d < Math.abs(r0 - r1)) {
-            System.out.println("INTERSECTION Circle1 AND Circle2 : Contain within");
+//            System.out.println("INTERSECTION Circle1 AND Circle2 : Contain within");
             /* no solution. one circle is contained in the other */
-            return ;
+            return new Point(Double.NaN, Double.NaN);
         }
 
         /* 'point 2' is the point where the line through the circle
@@ -94,8 +95,8 @@ public class ThreeCircleIntersectionCalculator  implements Calculator {
         double intersectionPoint2_y = point2_y - ry;
 
         System.out.println("INTERSECTION Circle1 AND Circle2:  (" + intersectionPoint1_x + "," + intersectionPoint1_y + ")" + " AND (" + intersectionPoint2_x + "," + intersectionPoint2_y + ")");
-        device.setX(Math.abs(intersectionPoint1_x));
-        device.setY(Math.abs(intersectionPoint1_y));
+        x = Math.abs(intersectionPoint1_x);
+        y = Math.abs(intersectionPoint1_y);
 
         /* Lets determine if circle 3 intersects at either of the above intersection points. */
         dx = intersectionPoint1_x - x2;
@@ -107,16 +108,18 @@ public class ThreeCircleIntersectionCalculator  implements Calculator {
         double d2 = Math.sqrt((dy * dy) + (dx * dx));
 
         if (Math.abs(d1 - r2) < EPSILON) {
-            System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: (" + intersectionPoint1_x + "," + intersectionPoint1_y + ")");
-            device.setX(Math.abs(intersectionPoint1_x));
-            device.setY(Math.abs(intersectionPoint1_y));
+//            System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: (" + intersectionPoint1_x + "," + intersectionPoint1_y + ")");
+            x = Math.abs(intersectionPoint1_x);
+            y = Math.abs(intersectionPoint1_y);
         } else if (Math.abs(d2 - r2) < EPSILON) {
-            System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: (" + intersectionPoint2_x + "," + intersectionPoint2_y + ")"); //here was an error
-            device.setX(Math.abs(intersectionPoint2_x));
-            device.setY(Math.abs(intersectionPoint2_y));
+//            System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: (" + intersectionPoint2_x + "," + intersectionPoint2_y + ")"); //here was an error
+            x = Math.abs(intersectionPoint2_x);
+            y = Math.abs(intersectionPoint2_y);
         } else {
-            System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: NONE");
+//            System.out.println("INTERSECTION Circle1 AND Circle2 AND Circle3: NONE");
         }
+        
+        return new Point(x, y);
     }
 
 }

@@ -17,8 +17,6 @@
 
 package nl.tjonahen.wificollector.calculator;
 
-import nl.tjonahen.wificollector.Device;
-
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
@@ -27,19 +25,26 @@ public class CircleIntersectionCalculator  implements Calculator  {
     /**
  * http://mathworld.wolfram.com/Circle-CircleIntersection.html
  */
-    public void recalculate(final Device device) {
+    public Point recalculate(final double x0,
+        final double y0, 
+        final double r0,
+        final double x1,
+        final double y1,
+        final double r1,
+        final double x2,
+        final double y2,
+        final double r2) {
         
-        double r = device.getDistanceToP2();
-        double R = device.getDistanceToP1();
-        double d = device.getP2().getX();
+        double r = r1;
+        double R = r0;
+        double d = x1;
         
         double x = Math.pow(d, 2) - Math.pow(r, 2) + Math.pow(R, 2) / (2 * d);
         
         double k = Math.pow(d, 2) - Math.pow(r,2)  + Math.pow(R,2);
         double y = (4 * Math.pow(d, 2) * Math.pow(R, 2) - Math.pow(k, 2)) / (4 * Math.pow(d, 2));
         
-        device.setX(x);
-        device.setY(y);
+        return new Point(x, y);
         
     }
 

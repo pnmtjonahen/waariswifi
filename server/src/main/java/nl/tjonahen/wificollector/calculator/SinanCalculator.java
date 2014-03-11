@@ -17,27 +17,22 @@
 
 package nl.tjonahen.wificollector.calculator;
 
-import nl.tjonahen.wificollector.Device;
-
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class SinanCalculator  implements Calculator  {
     
-    public void recalculate(final Device device) {
+    public Point recalculate(final double x1,
+        final double y1, 
+        final double dist1,
+        final double x2,
+        final double y2,
+        final double dist2,
+        final double x3,
+        final double y3,
+        final double dist3) {
  
-             double x1 = device.getP1().getX();
-             double y1 = device.getP1().getY();
-             double dist1 = device.getDistanceToP1();
- 
-             double x2 = device.getP2().getX();
-             double y2 = device.getP2().getY();
-             double dist2 = device.getDistanceToP2();
- 
-             double x3 = device.getP3().getX();
-             double y3 = device.getP3().getY();
-             double dist3 = device.getDistanceToP3();
  
              double y32 = y3 - y2;
              double y13 = y1 - y3;
@@ -54,8 +49,6 @@ public class SinanCalculator  implements Calculator  {
              double y = (A * x32 + B * x13 + C * x21)
                            / (2 * (y1 * x32 + y2 * x13 + y3 * x21));
              
-             device.setX(x);
-             device.setY(y);
- 
+             return new Point(x, y);
        }
 }

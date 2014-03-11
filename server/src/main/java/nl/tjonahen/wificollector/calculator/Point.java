@@ -21,29 +21,33 @@ package nl.tjonahen.wificollector.calculator;
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public interface Calculator {
-    /**
-     * Perform the location recalculation. All parameters are embedded within the device.
-     * 
-     * @param x0 -
-     * @param y0 -
-     * @param r0 -
-     * @param x1 -
-     * @param y1 -
-     * @param r1 -
-     * @param x2 -
-     * @param y2 -
-     * @param r2 -
-     * @return the new point
-     */
-    Point recalculate(
-        final double x0,
-        final double y0, 
-        final double r0,
-        final double x1,
-        final double y1,
-        final double r1,
-        final double x2,
-        final double y2,
-        final double r2);
+public class Point {
+    final private double x;
+    final private double y;
+
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+    
+    public boolean isValid() {
+        return isXValid() && isYValid();
+    }
+
+    private boolean isYValid() {
+        return !Double.isNaN(y);
+    }
+
+    private boolean isXValid() {
+        return !Double.isNaN(x);
+    }
+    
 }
