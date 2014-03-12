@@ -17,35 +17,21 @@
 
 package nl.tjonahen.wificollector.devicenameing;
 
-import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-@ApplicationScoped
-public class MacNameResolver {
-
-    private final Properties resolve;
-
-    public MacNameResolver() {
-        
-        this.resolve = new Properties();
-        try {
-            this.resolve.load(this.getClass().getResourceAsStream("/macnameresolver.properties"));
-        } catch (IOException ex) {
-            Logger.getLogger(MacNameResolver.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
+public class MacNameResolverTest {
     
-    public String resolve(final String deviceMac) {
-        final String key = deviceMac.replace(":","").toLowerCase();
-        return resolve.getProperty(key, deviceMac);
+    @Test
+    public void testResolver() {
+        final MacNameResolver macNameResolver = new MacNameResolver();
+        
+        Assert.assertEquals("Printer1", macNameResolver.resolve("00:26:ab:0b:cd:91"));
+                
+                
     }
-    
 }
