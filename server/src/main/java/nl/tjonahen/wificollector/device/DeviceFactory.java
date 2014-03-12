@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.tjonahen.wificollector;
+package nl.tjonahen.wificollector.device;
 
-import nl.tjonahen.wificollector.calculator.ThreeCircleIntersectionCalculator;
+import nl.tjonahen.wificollector.calculator.SinanCalculator;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 
 /**
@@ -26,6 +26,6 @@ import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
  */
 public class DeviceFactory {
     public static Device create(final String name, final EndpointMapping endpointMapping) {
-        return new Device(name, endpointMapping,new ThreeCircleIntersectionCalculator());
+        return new Device(name, endpointMapping,new SinanCalculator());
     }
 }

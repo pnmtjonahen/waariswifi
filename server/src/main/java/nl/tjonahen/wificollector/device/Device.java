@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.tjonahen.wificollector;
+package nl.tjonahen.wificollector.device;
 
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.calculator.Calculator;
@@ -29,9 +29,9 @@ import org.joda.time.Minutes;
  */
 public class Device {
     
-    private double distanceToP1 = 0;
-    private double distanceToP2 = 0;
-    private double distanceToP3 = 0;
+    private final Distance distanceToP1;
+    private final Distance distanceToP2;
+    private final Distance distanceToP3;
     
 
     private Point p = new Point(Double.NaN, Double.NaN);
@@ -48,43 +48,51 @@ public class Device {
         this.endpointMapping = endpointMapping;
         this.calculator = calculator;
         this.name = name;
-        lastupdated = DateTime.now();
+        this.distanceToP1 = new Distance(5);
+        this.distanceToP2 = new Distance(5, 0d);
+        this.distanceToP3 = new Distance(5, 0d);
+        this.lastupdated = DateTime.now();
     }
 
     public void update(final String endpointmac, final double distance) {
         lastupdated = DateTime.now();
         if (endpointMapping.getP1().isEndpoint(endpointmac)) {
-            distanceToP1 = distance;
+            distanceToP1.add(distance);
         } else if (endpointMapping.getP2().isEndpoint(endpointmac)) {
-            distanceToP2 = distance;
+            distanceToP2.add(distance);
         } else if (endpointMapping.getP3().isEndpoint(endpointmac)) {
-            distanceToP3 = distance;
+            distanceToP3.add(distance);
         }
         recalculate();
     }
 
     private void recalculate() {
-        System.out.println(String.format("%s, %f,%f,%f,%f,%f,%f,%f,%f,%f", 
-                this.name,
-                this.endpointMapping.getP1().getX(),
-                this.endpointMapping.getP1().getY(),
-                this.distanceToP1,
-                this.endpointMapping.getP2().getX(),
-                this.endpointMapping.getP2().getY(),
-                this.distanceToP2,
-                this.endpointMapping.getP3().getX(),
-                this.endpointMapping.getP3().getY(),
-                this.distanceToP3));
-        p = calculator.recalculate(
-                this.endpointMapping.getP1().getX(),
-                this.endpointMapping.getP1().getY(),
-                this.distanceToP1,
-                this.endpointMapping.getP2().getX(),
-                this.endpointMapping.getP2().getY(),
-                this.distanceToP2,
-                this.endpointMapping.getP3().getX(),
-                this.endpointMapping.getP3().getY(),
-                this.distanceToP3);
+        
+        if (!Double.isNaN(this.distanceToP1.getAverage())
+                && !Double.isNaN(this.distanceToP2.getAverage())
+                && !Double.isNaN(this.distanceToP3.getAverage())) {
+            System.out.println(String.format("%s, %f,%f,%f,%f,%f,%f,%f,%f,%f", 
+                    this.name,
+                    this.endpointMapping.getP1().getX(),
+                    this.endpointMapping.getP1().getY(),
+                    this.distanceToP1.getAverage(),
+                    this.endpointMapping.getP2().getX(),
+                    this.endpointMapping.getP2().getY(),
+                    this.distanceToP2.getAverage(),
+                    this.endpointMapping.getP3().getX(),
+                    this.endpointMapping.getP3().getY(),
+                    this.distanceToP3.getAverage()));
+            p = calculator.recalculate(
+                    this.endpointMapping.getP1().getX(),
+                    this.endpointMapping.getP1().getY(),
+                    this.distanceToP1.getAverage(),
+                    this.endpointMapping.getP2().getX(),
+                    this.endpointMapping.getP2().getY(),
+                    this.distanceToP2.getAverage(),
+                    this.endpointMapping.getP3().getX(),
+                    this.endpointMapping.getP3().getY(),
+                    this.distanceToP3.getAverage());
+        }
     }
 
     public double getX() {
@@ -103,6 +111,15 @@ public class Device {
     public boolean expired() {
         int minutes = Minutes.minutesBetween(lastupdated, DateTime.now()).getMinutes();
         return minutes > 5;
+    }
+
+    public double getDistance(String endpointMac) {
+        if (endpointMapping.getP3().isEndpoint(endpointMac)) {
+            return distanceToP3.getAverage();
+        } else if (endpointMapping.getP2().isEndpoint(endpointMac)) {
+            return distanceToP2.getAverage();
+        }
+        return distanceToP1.getAverage();
     }
         
     

@@ -17,6 +17,8 @@
 
 package nl.tjonahen.wificollector;
 
+import nl.tjonahen.wificollector.device.Device;
+import nl.tjonahen.wificollector.device.DeviceFactory;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.devicenameing.MacNameResolver;
 import java.util.ArrayList;
@@ -91,7 +93,7 @@ public class Triangulation {
         final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
         final Device n = nodeMap.get(deviceMac);
         n.update(endpointMac, distance);
-        result.add(new WifiDevicePayload(n.isValid(), name, n.getX(), n.getY(), endpointMac, distance));
+        result.add(new WifiDevicePayload(n.isValid(), name, n.getX(), n.getY(), endpointMac, n.getDistance(endpointMac)));
         return result;
     }
 

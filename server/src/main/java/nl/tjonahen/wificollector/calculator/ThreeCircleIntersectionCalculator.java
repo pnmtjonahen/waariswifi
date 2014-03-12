@@ -17,7 +17,7 @@
 
 package nl.tjonahen.wificollector.calculator;
 
-import nl.tjonahen.wificollector.Device;
+import nl.tjonahen.wificollector.device.Device;
 
 /**
  *
