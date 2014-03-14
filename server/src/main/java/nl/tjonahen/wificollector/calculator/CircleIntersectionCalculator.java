@@ -22,9 +22,10 @@ package nl.tjonahen.wificollector.calculator;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class CircleIntersectionCalculator  implements Calculator  {
+    
     /**
- * http://mathworld.wolfram.com/Circle-CircleIntersection.html
- */
+     * http://mathworld.wolfram.com/Circle-CircleIntersection.html
+     */
     public Point recalculate(final double x0,
         final double y0, 
         final double r0,

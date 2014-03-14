@@ -25,13 +25,24 @@ import org.junit.Test;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class ThreeCircleIntersectionCalculatorTest {
+    private final ThreeCircleIntersectionCalculator calc = new ThreeCircleIntersectionCalculator();
     
     @Test
-    public void testCalc() {
-        final ThreeCircleIntersectionCalculator calc = new ThreeCircleIntersectionCalculator();
+    public void testCalcLife() {
         final Point p = calc.recalculate(0.000000,0.000000,1.722709,3.000000,0.000000,15.353661,0.000000,3.000000,0.000000);
         
         Assert.assertNotNull(p);
+        Assert.assertFalse(p.isValid());
 
+    }
+    @Test
+    public void testCalc() {
+        final Point p = calc.recalculate(0.000000,0.000000,3.0,3.000000,0.000000,3.0,0.000000,3.000000,3.000000);
+        
+        Assert.assertNotNull(p);
+        Assert.assertTrue(p.isValid());
+        Assert.assertEquals(1.5, p.getX(), 0);
+        Assert.assertEquals(2.598, p.getY(), 3);
+        
     }
 }

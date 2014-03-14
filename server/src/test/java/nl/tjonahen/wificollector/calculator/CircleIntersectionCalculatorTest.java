@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.tjonahen.wificollector.calculator;
 
 import org.junit.Assert;
@@ -25,15 +24,29 @@ import org.junit.Test;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class CircleIntersectionCalculatorTest {
-    
+
+    private final CircleIntersectionCalculator calc = new CircleIntersectionCalculator();
+
     @Test
-    public void testCalc() {
-        
-        final CircleIntersectionCalculator calc = new CircleIntersectionCalculator();
-        
-        final Point p = calc.recalculate(0.000000,0.000000,1.722709,3.000000,0.000000,15.353661,0.000000,3.000000,0.000000);
-        
+    public void testCalcLife() {
+
+        final Point p = calc.recalculate(0.000000, 0.000000, 1.722709, 3.000000, 0.000000, 15.353661, 0.000000, 3.000000, 0.000000);
+
         Assert.assertNotNull(p);
+        Assert.assertTrue(p.isValid());
 
     }
+
+    @Test
+    public void testCalc() {
+        final Point p = calc.recalculate(0.000000, 0.000000, 3.0, 3.000000, 0.000000, 3.0, 0.000000, 3.000000, 3.000000);
+
+        Assert.assertNotNull(p);
+        Assert.assertTrue(p.isValid());
+        Assert.assertEquals(1.5, p.getX(), 0);
+//        Assert.assertEquals(2.598, p.getY(), 3);
+        Assert.assertEquals(6.75, p.getY(), 3);
+
+    }
+
 }
