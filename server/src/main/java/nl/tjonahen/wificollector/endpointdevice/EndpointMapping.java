@@ -14,41 +14,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.tjonahen.wificollector.endpointdevice;
 
-import java.io.IOException;
-import java.util.Properties;
-import javax.enterprise.context.ApplicationScoped;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import nl.tjonahen.wificollector.business.WaarIsWifiEJB;
+import nl.tjonahen.wificollector.model.EndpointEntity;
 
 /**
  *
  * Fixed locations and mac adresses are loaded from a property file
- * 
+ *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-@ApplicationScoped
+@Stateless
 public class EndpointMapping {
     // fixed locations
+
+    @EJB
+    private WaarIsWifiEJB waarIsWifiEJB;
+
     private EndpointDevice P1;
     private EndpointDevice P2;
     private EndpointDevice P3;
     private double p1p3;
     private double p2p3;
 
-    public EndpointMapping() throws IOException {
-        final Properties property = new Properties();
-        property.load(this.getClass().getResourceAsStream("/endpointmapping.properties"));
-        this.P1 = new EndpointDevice(property.getProperty("P1.mac"), 
-                Double.valueOf(property.getProperty("P1.x")), Double.valueOf(property.getProperty("P1.y")));
-        this.P2 = new EndpointDevice(property.getProperty("P2.mac"),
-                Double.valueOf(property.getProperty("P2.x")), Double.valueOf(property.getProperty("P2.y")));
-        this.P3 = new EndpointDevice(property.getProperty("P3.mac"),
-                Double.valueOf(property.getProperty("P3.x")), Double.valueOf(property.getProperty("P3.y")));
-
+    public EndpointMapping() {
     }
-    
-    
+
+    @PostConstruct
+    public void postConstruct() {
+        EndpointEntity ep = waarIsWifiEJB.get("P1");
+        if (ep == null) {
+            this.P1 = new EndpointDevice("P1.mac", 0, 0);
+        } else {
+            this.P1 = new EndpointDevice(ep.getMac(), ep.getX(), ep.getY());
+        }
+        ep = waarIsWifiEJB.get("P2");
+        if (ep == null) {
+            this.P2 = new EndpointDevice("P2.mac", 0, 0);
+        } else {
+            this.P2 = new EndpointDevice(ep.getMac(), ep.getX(), ep.getY());
+        }
+        ep = waarIsWifiEJB.get("P3");
+        if (ep == null) {
+            this.P3 = new EndpointDevice("P3.mac", 0, 0);
+        } else {
+            this.P3 = new EndpointDevice(ep.getMac(), ep.getX(), ep.getY());
+        }
+    }
+
     public void update(final String endpointMac, final String deviceMac, final double distance) {
         if (P1.isEndpoint(endpointMac) && P2.isEndpoint(deviceMac)) {
             P2.setX(distance);
@@ -84,40 +101,41 @@ public class EndpointMapping {
     public void setP3(EndpointDevice P3) {
         this.P3 = P3;
     }
-    
-    
 
     /*
-                    A
-                    /\
-                 c /  \ b
-                  /    \
-                 B------C
-                     a    
+     A
+     /\
+     c /  \ b
+     /    \
+     B------C
+     a    
     
-    P1 = B
-    P2 = C
-    P3 = A
+     P1 = B
+     P2 = C
+     P3 = A
     
-    */
+     */
     private void recalcP3() {
         final double p1p2 = P2.getX();
-    
+
         double a = p1p2;
         double b = p2p3;
         double c = p1p3;
-        
-        double A = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2))/-(2*b*c)) * 180/Math.PI;
-        double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
+
+        double A = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2)) / -(2 * b * c)) * 180 / Math.PI;
+        double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2)) / -(2 * a * c)) * 180 / Math.PI;
         double C = 180.0 - A - B;
-        
-        double h = c * Math.sin(Math.toRadians( B ));
-        
+
+        double h = c * Math.sin(Math.toRadians(B));
+
         P3.setY(h);
-        
+
         P3.setX(Math.sqrt(Math.pow(c, 2) - Math.pow(h, 2)));
-        
+
     }
-    
-    
+
+    public void update(final EndpointEntity endpoint) {
+        waarIsWifiEJB.update(endpoint);
+    }
+
 }

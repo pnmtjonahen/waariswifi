@@ -17,17 +17,30 @@
 
 package nl.tjonahen.wificollector.model;
 
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
+@Entity
+@NamedQueries({@NamedQuery(name = "EndpointEntity.selectAll", query = "SELECT e FROM EndpointEntity e")})
 @XmlRootElement
-public class XMLEndpoint {
+public class EndpointEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
     private String name;
+    @Basic
     private String mac;
+    @Basic
     private double x;
+    @Basic
     private double y;
 
     public String getName() {

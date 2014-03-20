@@ -18,8 +18,7 @@ package nl.tjonahen.wificollector;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import javax.ejb.EJB;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -27,19 +26,18 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
-import nl.tjonahen.wificollector.model.XMLEndpoint;
+import nl.tjonahen.wificollector.model.EndpointEntity;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-@ApplicationScoped
 @Path("/admin")
 public class AdminService {
 
-    @Inject
+    @EJB
     private EndpointMapping endpointMapping;
-
+    
     @GET
     @Path("/{endpointmac}/")
     public Response processGet(@PathParam(value = "endpointmac") final String endpointMac) {
@@ -56,8 +54,8 @@ public class AdminService {
 
     @GET
     @Path("/endpoints/")
-    public List<XMLEndpoint> processGetRoot() {
-        final List<XMLEndpoint> endpoints = new ArrayList<>();
+    public List<EndpointEntity> processGetRoot() {
+        final List<EndpointEntity> endpoints = new ArrayList<>();
 
         endpoints.add(toEndpoint("P1", endpointMapping.getP1())); 
         endpoints.add(toEndpoint("P2", endpointMapping.getP2())); 
@@ -68,11 +66,14 @@ public class AdminService {
 
     @PUT
     @Path("/endpoints/")
-    public Response processPost(final List<XMLEndpoint> endpoints) {
+    public Response processPost(final List<EndpointEntity> endpoints) {
 
-        for (XMLEndpoint endpoint : endpoints) {
+        for (EndpointEntity endpoint : endpoints) {
+            endpointMapping.update(endpoint);
+
             if ("P1".equals(endpoint.getName())) {
                 endpointMapping.setP1(new EndpointDevice(endpoint.getMac(), endpoint.getX(), endpoint.getY()));
+                
             }
             if ("P2".equals(endpoint.getName())) {
                 endpointMapping.setP2(new EndpointDevice(endpoint.getMac(), endpoint.getX(), endpoint.getY()));
@@ -85,8 +86,8 @@ public class AdminService {
     }
     
     
-    private XMLEndpoint toEndpoint(final String name, final EndpointDevice ep) {
-        final XMLEndpoint xmlep = new XMLEndpoint();
+    private EndpointEntity toEndpoint(final String name, final EndpointDevice ep) {
+        final EndpointEntity xmlep = new EndpointEntity();
         xmlep.setName(name);
         xmlep.setMac(ep.getMac());
         xmlep.setX(ep.getX());
