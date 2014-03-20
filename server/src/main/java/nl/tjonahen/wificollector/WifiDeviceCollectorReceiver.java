@@ -18,12 +18,10 @@
 package nl.tjonahen.wificollector;
 
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
-import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -72,40 +70,4 @@ public class WifiDeviceCollectorReceiver {
         return Response.ok().build();
     }
 
-
-    
-    @GET
-    @Path("/{endpointmac}/")
-    public String processGet(@PathParam(value = "endpointmac") final String endpointMac) {
-        if (endpointMapping.getP1().isEndpoint(endpointMac)) {
-            return endPointToJson("P1", endpointMapping.getP1());
-        }
-        if (endpointMapping.getP2().isEndpoint(endpointMac)) {
-            return endPointToJson("P2", endpointMapping.getP2());
-        }
-        if (endpointMapping.getP3().isEndpoint(endpointMac)) {
-            return endPointToJson("P3", endpointMapping.getP3());
-        }
-        
-        return "";
-    }
- 
-    @GET
-    public String processGetRoot() {
-        
-        return String.format("[%s, %s, %s]", 
-                        endPointToJson("P1", endpointMapping.getP1()), 
-                        endPointToJson("P2", endpointMapping.getP2()), 
-                        endPointToJson("P3", endpointMapping.getP3()));
-    }
-    
-    private String endPointToJson(final String name, final EndpointDevice ep) {
-        return String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s}", 
-                                        name, 
-                                        ep.getX(), 
-                                        ep.getY(), 
-                                        ep.getMac(),
-                                        0.0,
-                                        true);
-    }
 }

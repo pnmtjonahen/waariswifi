@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2014 Philippe Tjon-A-Hen philippe@tjonahen.nl
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html ng-app="waarIsWifiApp">
+    <head>
+        <title>WaarIsWifi</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="js/libs/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="js/libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+
+        <script src="js/libs/jquery/jquery.js"></script>
+
+        <script src="js/libs/bootstrap/js/bootstrap.js"></script>
+        <script src="js/libs/angular/angular.js"></script>
+        <script src="js/libs/angular/angular-resource.js"></script> 
+
+        <script src="js/app/services.js"></script>   
+        <script src="js/app/app.js"></script>   
+        <style>
+            td.mono {
+                font-family: monospace;
+            }
+            
+        </style>        
+    </head>
+    <body ng-controller="adminController">
+
+        <div class="container">
+
+            <div class="starter-template">
+                <h1>Waar Is Wifif - Admin</h1>
+                <form name="adminForm">
+                <table>
+                    <tr><th>Name</th><th>Mac</th><th>X</th><th>Y</th></tr>
+                    <tr>
+                        <td class="mono">{{endpoints[0].mac}}</td>
+                        <td><select ng-model="endpoints[0].id" ng-options="ep.name for ep in endpointNames"></select></td>
+                        <td><input type="text" ng-model="endpoints[0].x" name="p1x" smart-float/></td>
+                        <td><input type="text" ng-model="endpoints[0].y" name="p1y" smart-float/></td>
+                    </tr>
+                    <tr>
+                        <td class="mono">{{endpoints[1].mac}}</td>
+                        <td><select ng-model="endpoints[1].id" ng-options="ep.name for ep in endpointNames"></select></td>
+                        <td><input type="text" ng-model="endpoints[1].x"  name="p2x" smart-float/></td>
+                        <td><input type="text" ng-model="endpoints[1].y"  name="p2y" smart-float/></td>
+                    </tr>
+                    <tr>
+                        <td class="mono">{{endpoints[2].mac}}</td>
+                        <td><select ng-model="endpoints[2].id" ng-options="ep.name for ep in endpointNames"></select></td>
+                        <td><input type="text" ng-model="endpoints[2].x"  name="p3x" smart-float/></td>
+                        <td><input type="text" ng-model="endpoints[2].y"  name="p3y" smart-float/></td>
+                    </tr>
+                </table>
+                <button class="btn" ng-disabled="adminForm.$invalid" ng-click="save()">Save</button>                    
+                </form>
+            </div>
+        <hr/>
+        Debug View:
+        <pre>endpoints={{endpoints | json}}</pre>
+        <pre>adminForm.error = {{adminForm.$error}}</pre>
+        <pre>adminForm.valid = {{adminForm.$valid}}</pre>
+        </div><!-- /.container -->
+
+    </body>
+</html>
+
+
+

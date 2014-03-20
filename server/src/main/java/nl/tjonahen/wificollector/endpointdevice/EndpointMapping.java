@@ -30,9 +30,9 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class EndpointMapping {
     // fixed locations
-    private final EndpointDevice P1;
-    private final EndpointDevice P2;
-    private final EndpointDevice P3;
+    private EndpointDevice P1;
+    private EndpointDevice P2;
+    private EndpointDevice P3;
     private double p1p3;
     private double p2p3;
 
@@ -72,6 +72,20 @@ public class EndpointMapping {
     public EndpointDevice getP3() {
         return P3;
     }
+
+    public void setP1(EndpointDevice P1) {
+        this.P1 = P1;
+    }
+
+    public void setP2(EndpointDevice P2) {
+        this.P2 = P2;
+    }
+
+    public void setP3(EndpointDevice P3) {
+        this.P3 = P3;
+    }
+    
+    
 
     /*
                     A

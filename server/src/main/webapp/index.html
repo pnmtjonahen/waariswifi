@@ -148,10 +148,10 @@
 
             graph = new myGraph("#graph");
             $(document).ready(function() {
-                $.getJSON("http://" + location.host + "/server/rest/data",
+                $.getJSON("http://" + location.host + "/server/rest/admin/endpoints",
                             function(data) {
                                 data.forEach(function(node) {
-                                    graph.addNode(node);
+                                    graph.addNode({device:node.name, x:node.x, y:node.y, endpoint:node.mac, distance:0, triangulated:true, expired:false});
                                 });
                             });
                             

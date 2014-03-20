@@ -14,50 +14,53 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.tjonahen.wificollector.endpointdevice;
+
+package nl.tjonahen.wificollector.model;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class EndpointDevice {
-
-    private final String mac;
+@XmlRootElement
+public class XMLEndpoint {
+    private String name;
+    private String mac;
     private double x;
     private double y;
 
-    public EndpointDevice(String mac, double x, double y) {
-        this.mac = mac;
-        this.x = x;
-        this.y = y;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getMac() {
         return mac;
     }
-    
+
+    public void setMac(String mac) {
+        this.mac = mac;
+    }
 
     public double getX() {
         return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public boolean isEndpoint(final String endpointmac) {
-        return mac.equals(endpointmac);
     }
 
     public void setX(double x) {
         this.x = x;
     }
 
+    public double getY() {
+        return y;
+    }
+
     public void setY(double y) {
         this.y = y;
     }
 
-    
-    
-    
+
 }
