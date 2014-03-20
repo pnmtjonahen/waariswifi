@@ -41,24 +41,30 @@ function adminController($scope, adminEndpointsService) {
 
     $scope.endpoints = [{id: $scope.endpointNames[0]}, {id: $scope.endpointNames[1]}, {id: $scope.endpointNames[2]}];
 
-    adminEndpointsService.get(function(data) {
-        data.forEach(function(c) {
-            $scope.endpoints.forEach(function(ep) {
-                if (ep.id.name === c.name) {
-                    ep.x = c.x;
-                    ep.y = c.y;
-                    ep.mac = c.mac;
-                    
-                }
-            });
+    $scope.get = function() {
+        adminEndpointsService.get(function(data) {
+            data.forEach(function(c) {
+                $scope.endpoints.forEach(function(ep) {
+                    if (ep.id.name === c.name) {
+                        ep.x = c.x;
+                        ep.y = c.y;
+                        ep.mac = c.mac;
 
+                    }
+                });
+
+            });
         });
-    });
+    };
+    $scope.get();
+    
     $scope.save = function() {
         $scope.endpoints.forEach(function(ep) {
            ep.name = ep.id.name; 
         });
-        adminEndpointsService.update($scope.endpoints);
+        adminEndpointsService.update($scope.endpoints, function() {
+                $scope.get();
+        });
     };
 
 };
