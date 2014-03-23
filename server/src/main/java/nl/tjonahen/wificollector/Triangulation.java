@@ -34,15 +34,24 @@ import java.util.TreeMap;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class Triangulation {
-    private final MacNameResolver macNameResolver;
-    private final EndpointMapping endpointMapping;
+    private MacNameResolver macNameResolver;
+    private EndpointMapping endpointMapping;
     private final Map<String, Device> nodeMap;
     
-    public Triangulation(final EndpointMapping endpointMapping, final MacNameResolver macNameResolver) {
-        this.nodeMap = new TreeMap<>();
-        this.endpointMapping = endpointMapping;
-        this.macNameResolver = macNameResolver;
+    private static Triangulation instance = null;
+    public static synchronized Triangulation getInstance(final EndpointMapping endpointMapping, final MacNameResolver macNameResolver) {
+        if (instance == null) {
+            instance = new Triangulation();
+        }
+        instance.endpointMapping = endpointMapping;
+        instance.macNameResolver = macNameResolver;
+        return instance;
     }
+    private Triangulation() {
+        this.nodeMap = new TreeMap<>();
+    }
+
+
     
     /**
      * Determines the location of a device. If the device was one of the endpoints a new endpoint collection is returned

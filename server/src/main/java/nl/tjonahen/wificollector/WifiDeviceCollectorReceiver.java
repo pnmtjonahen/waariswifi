@@ -17,7 +17,7 @@
 
 package nl.tjonahen.wificollector;
 
-import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
+import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -27,9 +27,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import nl.tjonahen.wificollector.business.WaarIsWifiEJB;
 
 /**
- * Main entry pint for receiving enpoint data. This is called by the collector application to process captured data.
+ * Main entry pint for receiving endpoint data. This is called by the collector application to process captured data.
  * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
@@ -39,7 +40,8 @@ public class WifiDeviceCollectorReceiver {
     @Inject
     private Event<WifiDevicePayload> wsEvent; 
     
-    private Triangulation triangulation;
+    @EJB
+    private WaarIsWifiEJB waarIsWifiEJB;
 
 
     /**
@@ -57,7 +59,7 @@ public class WifiDeviceCollectorReceiver {
             @PathParam(value = "devicemac") final String deviceMac, 
             final String data) 
     {
-
+        final Triangulation triangulation = Triangulation.getInstance(waarIsWifiEJB.getEndpointMapping(), waarIsWifiEJB.getMacNameResolver());
         for (WifiDevicePayload p : triangulation.determineLocation(endpointMac, deviceMac, data)) {
             wsEvent.fire(p);
         }

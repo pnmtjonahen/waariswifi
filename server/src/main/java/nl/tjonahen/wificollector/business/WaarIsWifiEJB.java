@@ -17,13 +17,12 @@
 
 package nl.tjonahen.wificollector.business;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import nl.tjonahen.wificollector.devicenameing.MacNameResolver;
 import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.model.EndpointEntity;
@@ -101,6 +100,15 @@ public class WaarIsWifiEJB {
 
     public List<MacNameResolverEntity> getAllMacNameResolvers() {
         return entityManager.createNamedQuery("MacNameResolverEntity.selectAll", MacNameResolverEntity.class).getResultList();
+    }
+
+    @Transactional
+    public void delete(final MacNameResolverEntity entity) {
+        entityManager.remove(entity);
+    }
+
+    public MacNameResolver getMacNameResolver() {
+        return new MacNameResolver(getAllMacNameResolvers());
     }
     
     

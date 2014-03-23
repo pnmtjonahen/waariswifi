@@ -17,6 +17,9 @@
 
 package nl.tjonahen.wificollector.devicenameing;
 
+import java.util.ArrayList;
+import java.util.List;
+import nl.tjonahen.wificollector.model.MacNameResolverEntity;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,9 +31,14 @@ public class MacNameResolverTest {
     
     @Test
     public void testResolver() {
-        final MacNameResolver macNameResolver = new MacNameResolver();
+        List<MacNameResolverEntity> entitys = new ArrayList<>();
+        MacNameResolverEntity entity = new MacNameResolverEntity();
+        entity.setMac("00:26:ab:0b:cd:91");
+        entity.setName("Printer1");
+        entitys.add(entity);
+        final MacNameResolver macNameResolver = new MacNameResolver(entitys);
         
-        Assert.assertEquals("Printer1", macNameResolver.resolve("00:26:ab:0b:cd:91"));
+        Assert.assertEquals("Printer1", macNameResolver.resolve("00:26:AB:0B:CD:91"));
                 
                 
     }

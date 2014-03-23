@@ -17,10 +17,10 @@
 
 package nl.tjonahen.wificollector.devicenameing;
 
-import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import nl.tjonahen.wificollector.model.MacNameResolverEntity;
 
 /**
  *
@@ -28,22 +28,18 @@ import java.util.logging.Logger;
  */
 public class MacNameResolver {
 
-    private final Properties resolve;
+    private final Map<String, String> resolve;
 
-    public MacNameResolver() {
-        
-        this.resolve = new Properties();
-        try {
-            this.resolve.load(this.getClass().getResourceAsStream("/macnameresolver.properties"));
-        } catch (IOException ex) {
-            Logger.getLogger(MacNameResolver.class.getName()).log(Level.SEVERE, null, ex);
+    public MacNameResolver(final List<MacNameResolverEntity> names) {
+        this.resolve = new TreeMap<>();
+        for (MacNameResolverEntity entity : names) {
+            resolve.put(entity.getMac(), entity.getName());
         }
-        
     }
     
     public String resolve(final String deviceMac) {
-        final String key = deviceMac.replace(":","").toLowerCase();
-        return resolve.getProperty(key, deviceMac);
+        final String key = deviceMac.toLowerCase();
+        return resolve.getOrDefault(key, deviceMac);
     }
     
 }

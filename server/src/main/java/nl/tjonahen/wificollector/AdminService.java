@@ -103,6 +103,12 @@ public class AdminService {
         for (MacNameResolverEntity entity : list) {
             waarIsWifiEJB.update(entity);
         }
+        final List<MacNameResolverEntity> current = waarIsWifiEJB.getAllMacNameResolvers();
+        for (MacNameResolverEntity entity: current) {
+            if (!list.contains(entity)) {
+                waarIsWifiEJB.delete(entity);
+            }
+        }
         return Response.ok().build();
     }
 

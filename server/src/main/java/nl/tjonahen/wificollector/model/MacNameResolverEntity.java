@@ -18,6 +18,7 @@
 package nl.tjonahen.wificollector.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -55,6 +56,30 @@ public class MacNameResolverEntity implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + Objects.hashCode(this.mac);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MacNameResolverEntity other = (MacNameResolverEntity) obj;
+        if (!Objects.equals(this.mac, other.mac)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     
     
 }
