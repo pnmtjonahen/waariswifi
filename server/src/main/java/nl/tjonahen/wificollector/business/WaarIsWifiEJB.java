@@ -17,12 +17,17 @@
 
 package nl.tjonahen.wificollector.business;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
+import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.model.EndpointEntity;
+import nl.tjonahen.wificollector.model.MacNameResolverEntity;
 
 /**
  *
@@ -54,7 +59,49 @@ public class WaarIsWifiEJB {
             
             entityManager.merge(current);    
         }
-        
     }
+    public MacNameResolverEntity getMacNameResolverEntity(final String mac) {
+        return entityManager.find(MacNameResolverEntity.class, mac);
+    }
+    
+    @Transactional
+    public void update(final MacNameResolverEntity epe) {
+        final MacNameResolverEntity current = getMacNameResolverEntity(epe.getMac());
+        if (current == null) {
+            entityManager.persist(epe);
+        } else {
+            current.setName(epe.getName());
+            entityManager.merge(current);    
+        }
+    }
+    
+    
+    public EndpointMapping getEndpointMapping() {
+        final EndpointMapping em = new EndpointMapping();
+        EndpointEntity ep = get("P1");
+        if (ep == null) {
+            em.setP1(new EndpointDevice("P1.mac", 0, 0));
+        } else {
+            em.setP1(new EndpointDevice(ep.getMac(), ep.getX(), ep.getY()));
+        }
+        ep = get("P2");
+        if (ep == null) {
+            em.setP2(new EndpointDevice("P2.mac", 0, 0));
+        } else {
+            em.setP2(new EndpointDevice(ep.getMac(), ep.getX(), ep.getY()));
+        }
+        ep = get("P3");
+        if (ep == null) {
+            em.setP3(new EndpointDevice("P3.mac", 0, 0));
+        } else {
+            em.setP3(new EndpointDevice(ep.getMac(), ep.getX(), ep.getY()));
+        }
+        return em;
+    }
+
+    public List<MacNameResolverEntity> getAllMacNameResolvers() {
+        return entityManager.createNamedQuery("MacNameResolverEntity.selectAll", MacNameResolverEntity.class).getResultList();
+    }
+    
     
 }

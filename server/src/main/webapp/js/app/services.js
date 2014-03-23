@@ -23,5 +23,11 @@ waarIsWifiServiceModule.factory('adminEndpointsService', function($resource) {
     });
 });
 
+waarIsWifiServiceModule.factory('macNameResolverService', function($resource) {
+    return $resource('rest/admin/macnameresolver',{}, {
+        get:      {method: 'GET', params: {}, isArray: true},
+        update:   {method: 'PUT', params: {}, isArray: true}
+    });
+});
 
 

@@ -21,13 +21,11 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-@ApplicationScoped
 public class MacNameResolver {
 
     private final Properties resolve;

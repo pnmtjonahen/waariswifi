@@ -19,28 +19,35 @@ package nl.tjonahen.wificollector;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import nl.tjonahen.wificollector.business.WaarIsWifiEJB;
 import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.model.EndpointEntity;
+import nl.tjonahen.wificollector.model.MacNameResolverEntity;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 @Path("/admin")
+@Stateless
 public class AdminService {
 
+   
     @EJB
-    private EndpointMapping endpointMapping;
+    private WaarIsWifiEJB waarIsWifiEJB;
     
     @GET
     @Path("/{endpointmac}/")
     public Response processGet(@PathParam(value = "endpointmac") final String endpointMac) {
+        final EndpointMapping endpointMapping = waarIsWifiEJB.getEndpointMapping();
+        
         if (endpointMapping.getP1().isEndpoint(endpointMac)) {
             return Response.ok(toEndpoint("P1", endpointMapping.getP1())).build();
         } else  if (endpointMapping.getP2().isEndpoint(endpointMac)) {
@@ -55,6 +62,7 @@ public class AdminService {
     @GET
     @Path("/endpoints/")
     public List<EndpointEntity> processGetRoot() {
+        final EndpointMapping endpointMapping = waarIsWifiEJB.getEndpointMapping();
         final List<EndpointEntity> endpoints = new ArrayList<>();
 
         endpoints.add(toEndpoint("P1", endpointMapping.getP1())); 
@@ -69,18 +77,7 @@ public class AdminService {
     public Response processPost(final List<EndpointEntity> endpoints) {
 
         for (EndpointEntity endpoint : endpoints) {
-            endpointMapping.update(endpoint);
-
-            if ("P1".equals(endpoint.getName())) {
-                endpointMapping.setP1(new EndpointDevice(endpoint.getMac(), endpoint.getX(), endpoint.getY()));
-                
-            }
-            if ("P2".equals(endpoint.getName())) {
-                endpointMapping.setP2(new EndpointDevice(endpoint.getMac(), endpoint.getX(), endpoint.getY()));
-            }
-            if ("P3".equals(endpoint.getName())) {
-                endpointMapping.setP3(new EndpointDevice(endpoint.getMac(), endpoint.getX(), endpoint.getY()));
-            }
+            waarIsWifiEJB.update(endpoint);
         }
         return Response.ok().build();
     }
@@ -95,5 +92,24 @@ public class AdminService {
         
         return xmlep;
     }
+    @GET
+    @Path("/macnameresolver/")
+    public List<MacNameResolverEntity> getMacNameResolvers() {
+        return waarIsWifiEJB.getAllMacNameResolvers();
+    }
+    @PUT
+    @Path("/macnameresolver/")
+    public Response putMacNameResolvers(final List<MacNameResolverEntity> list) {
+        for (MacNameResolverEntity entity : list) {
+            waarIsWifiEJB.update(entity);
+        }
+        return Response.ok().build();
+    }
 
+    private MacNameResolverEntity newMacNameresolver(String string, String string0) {
+        MacNameResolverEntity entity = new MacNameResolverEntity();
+        entity.setMac(string);
+        entity.setName(string0);
+        return entity;
+    }
 }

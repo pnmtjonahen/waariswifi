@@ -16,24 +16,14 @@
  */
 package nl.tjonahen.wificollector.endpointdevice;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import nl.tjonahen.wificollector.business.WaarIsWifiEJB;
-import nl.tjonahen.wificollector.model.EndpointEntity;
-
 /**
  *
  * Fixed locations and mac adresses are loaded from a property file
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-@Stateless
 public class EndpointMapping {
     // fixed locations
-
-    @EJB
-    private WaarIsWifiEJB waarIsWifiEJB;
 
     private EndpointDevice P1;
     private EndpointDevice P2;
@@ -42,28 +32,6 @@ public class EndpointMapping {
     private double p2p3;
 
     public EndpointMapping() {
-    }
-
-    @PostConstruct
-    public void postConstruct() {
-        EndpointEntity ep = waarIsWifiEJB.get("P1");
-        if (ep == null) {
-            this.P1 = new EndpointDevice("P1.mac", 0, 0);
-        } else {
-            this.P1 = new EndpointDevice(ep.getMac(), ep.getX(), ep.getY());
-        }
-        ep = waarIsWifiEJB.get("P2");
-        if (ep == null) {
-            this.P2 = new EndpointDevice("P2.mac", 0, 0);
-        } else {
-            this.P2 = new EndpointDevice(ep.getMac(), ep.getX(), ep.getY());
-        }
-        ep = waarIsWifiEJB.get("P3");
-        if (ep == null) {
-            this.P3 = new EndpointDevice("P3.mac", 0, 0);
-        } else {
-            this.P3 = new EndpointDevice(ep.getMac(), ep.getX(), ep.getY());
-        }
     }
 
     public void update(final String endpointMac, final String deviceMac, final double distance) {
@@ -133,9 +101,4 @@ public class EndpointMapping {
         P3.setX(Math.sqrt(Math.pow(c, 2) - Math.pow(h, 2)));
 
     }
-
-    public void update(final EndpointEntity endpoint) {
-        waarIsWifiEJB.update(endpoint);
-    }
-
 }

@@ -39,11 +39,8 @@ public class WifiDeviceCollectorReceiver {
     @Inject
     private Event<WifiDevicePayload> wsEvent; 
     
-    @Inject 
     private Triangulation triangulation;
 
-    @Inject
-    private EndpointMapping endpointMapping; 
 
     /**
      * Handles the processing of the captured data.

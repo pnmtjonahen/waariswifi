@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 /**
  *
@@ -35,23 +33,15 @@ import javax.inject.Inject;
  * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-@ApplicationScoped
 public class Triangulation {
-    @Inject 
-    private MacNameResolver macNameResolver;
-    
-    @Inject
-    private EndpointMapping endpointMapping;
-
-    void setEndpointMapping(EndpointMapping endpointMapping) {
-        this.endpointMapping = endpointMapping;
-    }
-    
-
+    private final MacNameResolver macNameResolver;
+    private final EndpointMapping endpointMapping;
     private final Map<String, Device> nodeMap;
     
-    public Triangulation() {
-        nodeMap = new TreeMap<>();
+    public Triangulation(final EndpointMapping endpointMapping, final MacNameResolver macNameResolver) {
+        this.nodeMap = new TreeMap<>();
+        this.endpointMapping = endpointMapping;
+        this.macNameResolver = macNameResolver;
     }
     
     /**

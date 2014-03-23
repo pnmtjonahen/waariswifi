@@ -69,3 +69,26 @@ function adminController($scope, adminEndpointsService) {
 
 };
 
+function macNameResolverController($scope, macNameResolverService) {
+    $scope.resolvers = [];
+    
+    $scope.get = function () {
+        macNameResolverService.get(function(data) {
+            $scope.resolvers = data;
+        });
+    };
+    $scope.get();
+    
+    $scope.addNew = function() {
+        $scope.resolvers.push({mac:"", name:""});
+    };
+    $scope.save = function() {
+        macNameResolverService.update($scope.resolvers, function() {
+                $scope.get();
+        }, function(error) {
+            Alert("server error "+error);
+        });
+    };
+    
+};
+
