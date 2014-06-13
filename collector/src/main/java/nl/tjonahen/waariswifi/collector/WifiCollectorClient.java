@@ -26,35 +26,54 @@ import javax.ws.rs.core.Response;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class WifiCollectorClient {
+    
+    private static final int HTTP_RESPONSE_OK = 200;
+    
+    private static final int FREQUENCY_IDX = 3;
+    private static final int DB_IDX = 2;
+    private static final int DEVICEMAC_IDX = 1;
+    private static final int TIMESTAMP_IDX = 0;
+    private static final int NUMBER_OF_FIELDS = 4;
+
 
     private final Client client;
     private final String baseUrl;
     private final String endpointmac;
 
+    /**
+     * 
+     * @param client -
+     * @param endpointmac -
+     * @param baseUrl -
+     */
     public WifiCollectorClient(final Client client, final String endpointmac, final String baseUrl) {
         this.client = client;
         this.baseUrl = baseUrl;
         this.endpointmac = endpointmac;
     }
 
+    /**
+     * 
+     * @param line -
+     */
     public void process(final String line) {
 
         final String[] fields = line.split("\t");
-        if (fields.length != 4) {
+        if (fields.length != NUMBER_OF_FIELDS) {
             System.out.println("TShark reports " + line);
             return;
         }
-        final String timestamp = fields[0];
-        final String devicemac = fields[1];
-        final String db = fields[2];
-        final String frequency = fields[3];
+        final String timestamp = fields[TIMESTAMP_IDX];
+        final String devicemac = fields[DEVICEMAC_IDX];
+        final String db = fields[DB_IDX];
+        final String frequency = fields[FREQUENCY_IDX];
         
         final Response response = client
                 .target(baseUrl + "/" + endpointmac + "/" + devicemac)
                 .request()
                 .post(Entity.entity(timestamp + ":" + db + ":" + frequency, MediaType.TEXT_PLAIN));
 
-        if (response.getStatus() != 200) {
+        if (response.getStatus() != HTTP_RESPONSE_OK) {
             System.out.println("Recieved HTTP:" + response.getStatus());
         }
     }

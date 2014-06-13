@@ -25,49 +25,58 @@ package nl.tjonahen.wificollector.endpointdevice;
 public class EndpointMapping {
     // fixed locations
 
-    private EndpointDevice P1;
-    private EndpointDevice P2;
-    private EndpointDevice P3;
+    private EndpointDevice endpointP1;
+    private EndpointDevice endpointP2;
+    private EndpointDevice endpointP3;
     private double p1p3;
     private double p2p3;
 
+    /**
+     * default.
+     */
     public EndpointMapping() {
     }
 
+    /**
+     * 
+     * @param endpointMac -
+     * @param deviceMac -
+     * @param distance -
+     */
     public void update(final String endpointMac, final String deviceMac, final double distance) {
-        if (P1.isEndpoint(endpointMac) && P2.isEndpoint(deviceMac)) {
-            P2.setX(distance);
-        } else if (P1.isEndpoint(endpointMac) && P3.isEndpoint(deviceMac)) {
+        if (endpointP1.isEndpoint(endpointMac) && endpointP2.isEndpoint(deviceMac)) {
+            endpointP2.setX(distance);
+        } else if (endpointP1.isEndpoint(endpointMac) && endpointP3.isEndpoint(deviceMac)) {
             p1p3 = distance;
             recalcP3();
-        } else if (P2.isEndpoint(endpointMac) && P3.isEndpoint(deviceMac)) {
+        } else if (endpointP2.isEndpoint(endpointMac) && endpointP3.isEndpoint(deviceMac)) {
             p2p3 = distance;
             recalcP3();
         }
     }
 
     public EndpointDevice getP1() {
-        return P1;
+        return endpointP1;
     }
 
     public EndpointDevice getP2() {
-        return P2;
+        return endpointP2;
     }
 
     public EndpointDevice getP3() {
-        return P3;
+        return endpointP3;
     }
 
-    public void setP1(EndpointDevice P1) {
-        this.P1 = P1;
+    public void setP1(final EndpointDevice epP1) {
+        this.endpointP1 = epP1;
     }
 
-    public void setP2(EndpointDevice P2) {
-        this.P2 = P2;
+    public void setP2(final EndpointDevice epP2) {
+        this.endpointP2 = epP2;
     }
 
-    public void setP3(EndpointDevice P3) {
-        this.P3 = P3;
+    public void setP3(final EndpointDevice epP3) {
+        this.endpointP3 = epP3;
     }
 
     /*
@@ -84,21 +93,21 @@ public class EndpointMapping {
     
      */
     private void recalcP3() {
-        final double p1p2 = P2.getX();
+        final double p1p2 = endpointP2.getX();
 
         double a = p1p2;
         double b = p2p3;
         double c = p1p3;
 
-        double A = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2)) / -(2 * b * c)) * 180 / Math.PI;
-        double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2)) / -(2 * a * c)) * 180 / Math.PI;
-//        double C = 180.0 - A - B;
+        //CHECKSTYLE:OFF
+        double pA = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2)) / -(2 * b * c)) * 180 / Math.PI;
+        double pB = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2)) / -(2 * a * c)) * 180 / Math.PI;
+        //CHECKSTYLE:ON
+        double h = c * Math.sin(Math.toRadians(pB));
 
-        double h = c * Math.sin(Math.toRadians(B));
+        endpointP3.setY(h);
 
-        P3.setY(h);
-
-        P3.setX(Math.sqrt(Math.pow(c, 2) - Math.pow(h, 2)));
+        endpointP3.setX(Math.sqrt(Math.pow(c, 2) - Math.pow(h, 2)));
 
     }
 }

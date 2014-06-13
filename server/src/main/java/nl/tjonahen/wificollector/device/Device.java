@@ -24,10 +24,12 @@ import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
 /**
- *
+ * A device mapped or triangulated.
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class Device {
+    private static final int MAX_NUMBER_OF_DISTANCES = 5;
+    private static final int EXPIRED_MINUTES = 5;
     
     private final Distance distanceToP1;
     private final Distance distanceToP2;
@@ -42,16 +44,28 @@ public class Device {
     
     private DateTime lastupdated;
     
+    /**
+     * 
+     * @param name -
+     * @param endpointMapping -
+     * @param calculator -
+     */
     public Device(final String name, final EndpointMapping endpointMapping, final Calculator calculator) {
         this.endpointMapping = endpointMapping;
         this.calculator = calculator;
         this.name = name;
-        this.distanceToP1 = new Distance(5);
-        this.distanceToP2 = new Distance(5, 0d);
-        this.distanceToP3 = new Distance(5, 0d);
+        this.distanceToP1 = new Distance(MAX_NUMBER_OF_DISTANCES);
+        this.distanceToP2 = new Distance(MAX_NUMBER_OF_DISTANCES, 0d);
+        this.distanceToP3 = new Distance(MAX_NUMBER_OF_DISTANCES, 0d);
         this.lastupdated = DateTime.now();
     }
 
+    /**
+     * Update the device with a new distance to a endpoint. Recalculate the location of this device.
+     * 
+     * @param endpointmac -
+     * @param distance -
+     */
     public void update(final String endpointmac, final double distance) {
         lastupdated = DateTime.now();
         if (endpointMapping.getP1().isEndpoint(endpointmac)) {
@@ -68,7 +82,8 @@ public class Device {
         
         if (!Double.isNaN(this.distanceToP1.getAverage())
                 && !Double.isNaN(this.distanceToP2.getAverage())
-                && !Double.isNaN(this.distanceToP3.getAverage())) {
+                && !Double.isNaN(this.distanceToP3.getAverage())) 
+        {
             System.out.println(String.format("%s, %f,%f,%f,%f,%f,%f,%f,%f,%f", 
                     this.name,
                     this.endpointMapping.getP1().getX(),
@@ -105,12 +120,20 @@ public class Device {
         return p.isValid();
     }
 
-    
+    /**
+     * 
+     * @return true if the device is expired. Aka not updated within a time span
+     */
     public boolean expired() {
         int minutes = Minutes.minutesBetween(lastupdated, DateTime.now()).getMinutes();
-        return minutes > 5;
+        return minutes > EXPIRED_MINUTES;
     }
 
+    /**
+     * Get the distance to a endpoint
+     * @param endpointMac -
+     * @return -
+     */
     public double getDistance(String endpointMac) {
         if (endpointMapping.getP3().isEndpoint(endpointMac)) {
             return distanceToP3.getAverage();

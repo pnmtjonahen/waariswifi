@@ -18,7 +18,8 @@
 package nl.tjonahen.wificollector.device;
 
 /**
- *
+ * Calculates the average distance. Hold up to max number of distances and calculate the average.
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class Distance {
@@ -26,23 +27,40 @@ public class Distance {
     
     private final FixedSizeList<Double> fixedSizeList;
     private final double defaultDistance;
+    
+    /**
+     * 
+     * @param max size.
+     */
     public Distance(final int max) {
         this.maxSize = max;
         this.fixedSizeList = new FixedSizeList<Double>(maxSize);
         this.defaultDistance = Double.NaN;
     }
 
+    /**
+     * 
+     * @param max size 
+     * @param def default distance
+     */
     public Distance(final int max, final double def) {
         this.maxSize = max;
         this.fixedSizeList = new FixedSizeList<Double>(maxSize);
         this.defaultDistance = def;
     }
     
-    
+    /**
+     * 
+     * @param distance add distance 
+     */
     public void add(final double distance) {
         fixedSizeList.add(distance);
     }
     
+    /**
+     * 
+     * @return average distance 
+     */
     public double getAverage() {
         if (fixedSizeList.size() >= maxSize) {
             double sum = 0;

@@ -23,6 +23,21 @@ package nl.tjonahen.wificollector.calculator;
  */
 public class SinanCalculator  implements Calculator  {
     
+    //CHECKSTYLE:OFF
+    /**
+     * 
+     * @param x1 -
+     * @param y1 -
+     * @param dist1 -
+     * @param x2 -
+     * @param y2 -
+     * @param dist2 -
+     * @param x3 -
+     * @param y3 -
+     * @param dist3 -
+     * @return -
+     */
+    @Override
     public Point recalculate(final double x1,
         final double y1, 
         final double dist1,
@@ -31,7 +46,8 @@ public class SinanCalculator  implements Calculator  {
         final double dist2,
         final double x3,
         final double y3,
-        final double dist3) {
+        final double dist3) 
+    {
  
  
              double y32 = y3 - y2;
@@ -40,15 +56,16 @@ public class SinanCalculator  implements Calculator  {
              double x32 = x3 - x2;
              double x13 = x1 - x3;
              double x21 = x2 - x1;
-             double A = Math.pow(x1, 2) + Math.pow(y1, 2) - Math.pow(dist1, 2);
-             double B = Math.pow(x2, 2) + Math.pow(y2, 2) - Math.pow(dist2, 2);
-             double C = Math.pow(x3, 2) + Math.pow(y3, 2) - Math.pow(dist3, 2);
+             double pA = Math.pow(x1, 2) + Math.pow(y1, 2) - Math.pow(dist1, 2);
+             double pB = Math.pow(x2, 2) + Math.pow(y2, 2) - Math.pow(dist2, 2);
+             double pC = Math.pow(x3, 2) + Math.pow(y3, 2) - Math.pow(dist3, 2);
  
-             double x = (A * y32 + B * y13 + C * y21)
+             double x = (pA * y32 + pB * y13 + pC * y21)
                            / (2 * (x1 * y32 + x2 * y13 + x3 * y21));
-             double y = (A * x32 + B * x13 + C * x21)
+             double y = (pA * x32 + pB * x13 + pC * x21)
                            / (2 * (y1 * x32 + y2 * x13 + y3 * x21));
              
              return new Point(x, y);
        }
+    //CHECKSTYLE:ON
 }

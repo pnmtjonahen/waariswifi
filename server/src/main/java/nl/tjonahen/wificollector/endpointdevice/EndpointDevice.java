@@ -17,7 +17,8 @@
 package nl.tjonahen.wificollector.endpointdevice;
 
 /**
- *
+ * EndpointDevice are the devices that are used to monitor wifi signals.
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class EndpointDevice {
@@ -26,6 +27,12 @@ public class EndpointDevice {
     private double x;
     private double y;
 
+    /**
+     * 
+     * @param mac -
+     * @param x -
+     * @param y -
+     */
     public EndpointDevice(String mac, double x, double y) {
         this.mac = mac;
         this.x = x;
@@ -45,6 +52,11 @@ public class EndpointDevice {
         return y;
     }
 
+    /**
+     * 
+     * @param endpointmac -
+     * @return true if this is the endpoint
+     */
     public boolean isEndpoint(final String endpointmac) {
         return mac.equals(endpointmac);
     }

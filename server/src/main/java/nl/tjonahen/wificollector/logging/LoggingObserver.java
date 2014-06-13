@@ -30,8 +30,13 @@ public class LoggingObserver {
 
     private static final Logger LOGGER = Logger.getLogger(LoggingObserver.class.getName());
 
+    /**
+     * 
+     * @param msg -
+     */
     public void onMessage(@Observes WifiDevicePayload msg) {
-        LOGGER.info(String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s, \"expired\":%s}",
+        LOGGER.info(String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\","
+                                            + " \"distance\":\"%f\", \"triangulated\":%s, \"expired\":%s}",
                 msg.getDeviceMac(),
                 msg.getX(),
                 msg.getY(),

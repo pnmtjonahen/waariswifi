@@ -28,20 +28,30 @@ import javax.ws.rs.client.ClientBuilder;
  *  args[3] optional logfile to monitor if not given use stdin
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class App {
+public final class App {
+    private App() {
+        
+    }
+    /**
+     * 
+     * @param args -
+     * @throws FileNotFoundException -
+     */
     public static void main(String[] args) throws FileNotFoundException {
         if (args.length == 0) {
             System.out.println("Usage: localMacadress serverBaseUrl [input]");
             System.out.println("If no input file is given app will use stdin");
         } else {
             // CDI wireing :)
-            final TSharkLogHandler tSharkLogHandler = new TSharkLogHandler(new WifiCollectorClient(ClientBuilder.newClient(), args[0], args[1]));
+            final TSharkLogHandler tSharkLogHandler = new TSharkLogHandler(
+                                            new WifiCollectorClient(ClientBuilder.newClient(), args[0], args[1]));
 
-            if (args.length >= 3) {
+            if (args.length >= MIN_ARGS) {
                 tSharkLogHandler.run(new FileInputStream(args[2]));
             } else {
                 tSharkLogHandler.run(System.in);
             }
         }
     }
+    private static final int MIN_ARGS = 3;
 }

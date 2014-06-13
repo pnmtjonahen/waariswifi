@@ -22,6 +22,22 @@ package nl.tjonahen.wificollector.calculator;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class PhilippeCalculator implements Calculator {
+
+    //CHECKSTYLE:OFF
+    /**
+     * 
+     * @param x0 -
+     * @param y0 -
+     * @param r0 -
+     * @param x1 -
+     * @param y1 -
+     * @param r1 -
+     * @param x2 -
+     * @param y2 -
+     * @param r2 -
+     * @return -
+     */
+    @Override
     public Point recalculate(final double x0,
         final double y0, 
         final double r0,
@@ -30,7 +46,8 @@ public class PhilippeCalculator implements Calculator {
         final double r1,
         final double x2,
         final double y2,
-        final double r2) {
+        final double r2) 
+    {
     /*
                     A
                     /\
@@ -48,14 +65,13 @@ public class PhilippeCalculator implements Calculator {
         double b = r1;
         double c = r0;
         
-        double A = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2))/-(2*b*c)) * 180/Math.PI;
-        double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
-//        double C = 180.0 - A - B;
+        double pA = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2))/-(2*b*c)) * 180/Math.PI;
+        double pB = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
         
-        double y = c * Math.sin(Math.toRadians( B ));
+        double y = c * Math.sin(Math.toRadians(pB));
         double x = Math.sqrt(Math.pow(c, 2) - Math.pow(y, 2));
         
         return new Point(x, y);
     }
-
+    //CHECKSTYLE:ON
 }

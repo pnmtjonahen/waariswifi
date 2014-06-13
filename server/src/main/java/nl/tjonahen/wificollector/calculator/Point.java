@@ -18,13 +18,19 @@
 package nl.tjonahen.wificollector.calculator;
 
 /**
- *
+ * A single coordinate point.
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class Point {
     private final double x;
     private final double y;
 
+    /**
+     * 
+     * @param x -
+     * @param y -
+     */
     public Point(double x, double y) {
         this.x = x;
         this.y = y;

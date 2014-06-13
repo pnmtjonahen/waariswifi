@@ -21,11 +21,21 @@ import nl.tjonahen.wificollector.calculator.SinanCalculator;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 
 /**
- *
+ * Device factory. Determines the calculator to use
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class DeviceFactory {
+public final class DeviceFactory {
+    private DeviceFactory() {
+        
+    }
+    
+    /**
+     * 
+     * @param name -
+     * @param endpointMapping -
+     * @return -
+     */
     public static Device create(final String name, final EndpointMapping endpointMapping) {
-        return new Device(name, endpointMapping,new SinanCalculator());
+        return new Device(name, endpointMapping, new SinanCalculator());
     }
 }

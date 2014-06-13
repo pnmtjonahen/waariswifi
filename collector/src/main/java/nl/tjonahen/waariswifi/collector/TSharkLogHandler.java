@@ -29,19 +29,27 @@ public class TSharkLogHandler {
 
     private final WifiCollectorClient wifiCollectorClient;
 
-    public TSharkLogHandler(WifiCollectorClient wifiCollectorClient) {
+    /**
+     * 
+     * @param wifiCollectorClient -
+     */
+    public TSharkLogHandler(final WifiCollectorClient wifiCollectorClient) {
         this.wifiCollectorClient = wifiCollectorClient;
     }
 
+    /**
+     * 
+     * @param input - 
+     */
     public void run(final InputStream input) {
-        BufferedReader bf = new BufferedReader(new InputStreamReader(input));
+        final BufferedReader bf = new BufferedReader(new InputStreamReader(input));
         while (true) {
             try {
                 String line = bf.readLine();
                 if (line != null) {
                     wifiCollectorClient.process(line);
                 } else {
-                    Thread.sleep(10);
+                    Thread.sleep(TIME_OUT);
                 }
             } catch (IOException | InterruptedException e) {
                 System.out.println(e.getMessage());
@@ -49,5 +57,6 @@ public class TSharkLogHandler {
         }
 
     }
+    private static final int TIME_OUT = 10;
 
 }

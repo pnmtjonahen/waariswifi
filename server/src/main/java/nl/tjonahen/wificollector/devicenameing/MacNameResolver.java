@@ -23,13 +23,17 @@ import java.util.TreeMap;
 import nl.tjonahen.wificollector.model.MacNameResolverEntity;
 
 /**
- *
+ * mac to name resolver. Used to resolve known macadresses into a userfriendly name.
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class MacNameResolver {
 
     private final Map<String, String> resolve;
 
+    /**
+     * 
+     * @param names list of names 
+     */
     public MacNameResolver(final List<MacNameResolverEntity> names) {
         this.resolve = new TreeMap<>();
         for (MacNameResolverEntity entity : names) {
@@ -37,6 +41,11 @@ public class MacNameResolver {
         }
     }
     
+    /**
+     * 
+     * @param deviceMac -
+     * @return -
+     */
     public String resolve(final String deviceMac) {
         final String key = deviceMac.toLowerCase();
         return resolve.getOrDefault(key, deviceMac);

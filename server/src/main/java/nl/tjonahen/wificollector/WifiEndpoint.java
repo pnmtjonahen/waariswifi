@@ -41,37 +41,60 @@ public class WifiEndpoint {
     private static final Logger LOGGER = Logger.getLogger(WifiEndpoint.class.getName());
     
 
-    private static final Set<Session> sessions
+    private static final Set<Session> SESSIONS
             = Collections.synchronizedSet(new HashSet<Session>());
 
+    /**
+     * 
+     * @param session - 
+     */
     @OnOpen
     public void onOpen(final Session session) {
         LOGGER.info("Open...");
-        sessions.add(session);
+        SESSIONS.add(session);
     }
 
+    /**
+     * 
+     * @param message -
+     * @param client 
+     */
     @OnMessage
     public void onMessage(final String message, final Session client) {
         LOGGER.log(Level.FINEST, "onMessage({0})", message);
     }
 
+    /**
+     * 
+     * @param t - 
+     */
     @OnError
     public void onError(Throwable t) {
         LOGGER.log(Level.FINEST, "onError({0})", t.getMessage());
     }
 
+    /**
+     * 
+     * @param session - 
+     */
     @OnClose
     public void onClose(final Session session) {
         LOGGER.info("Close...");
-        sessions.remove(session);
+        SESSIONS.remove(session);
     }
 
+    /**
+     * Observer method called when a wifipayload event is fired.
+     * 
+     * @param msg wifi payload 
+     */
     public void onJMSMessage(@Observes WifiDevicePayload msg) {
-        for (Session s : sessions) {
+        for (Session s : SESSIONS) {
             if (s.isOpen()) {
                 try {
                     s.getBasicRemote().sendText(
-                                String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s, \"expired\":%s}", 
+                                String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\","
+                                                        +" \"distance\":\"%f\", \"triangulated\":%s, \"expired\":%s}", 
                                         msg.getDeviceMac(), 
                                         msg.getX(), 
                                         msg.getY(), 

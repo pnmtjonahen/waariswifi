@@ -1,3 +1,5 @@
+package nl.tjonahen.waariswifi.collector;
+
 /*
  * Copyright (C) 2014 Philippe Tjon-A-Hen philippe@tjonahen.nl
  *

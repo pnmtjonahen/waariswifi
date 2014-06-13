@@ -22,6 +22,8 @@ package nl.tjonahen.wificollector.calculator;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public interface Calculator {
+    
+    //CHECKSTYLE:OFF
     /**
      * Perform the location recalculation. All parameters are embedded within the device.
      * 
@@ -46,4 +48,5 @@ public interface Calculator {
         final double x2,
         final double y2,
         final double r2);
+    //CHECKSTYLE:ON
 }

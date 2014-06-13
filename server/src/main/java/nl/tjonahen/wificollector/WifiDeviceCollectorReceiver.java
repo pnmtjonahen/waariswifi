@@ -30,7 +30,8 @@ import javax.ws.rs.core.Response;
 import nl.tjonahen.wificollector.business.WaarIsWifiEJB;
 
 /**
- * Main entry pint for receiving endpoint data. This is called by the collector application to process captured data.
+ * Main entry point for receiving endpoint data. 
+ * This REST service is called by the collector application to process captured data.
  * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
@@ -57,8 +58,10 @@ public class WifiDeviceCollectorReceiver {
     public Response process(
             @PathParam(value = "endpointmac") final String endpointMac, 
             @PathParam(value = "devicemac") final String deviceMac, 
-            final String data) {
-        final Triangulation triangulation = Triangulation.getInstance(waarIsWifiEJB.getEndpointMapping(), waarIsWifiEJB.getMacNameResolver());
+            final String data) 
+    {
+        final Triangulation triangulation = Triangulation.getInstance(waarIsWifiEJB.getEndpointMapping(), 
+                                                                            waarIsWifiEJB.getMacNameResolver());
         for (WifiDevicePayload p : triangulation.determineLocation(endpointMac, deviceMac, data)) {
             wsEvent.fire(p);
         }

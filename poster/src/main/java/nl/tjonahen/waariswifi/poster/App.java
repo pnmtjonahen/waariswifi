@@ -25,8 +25,16 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class App {
+public final class App {
 
+    private App() {
+        
+    }
+    
+    /**
+     * 
+     * @param args - 
+     */
     public static void main(final String... args) {
         final Client client = ClientBuilder.newClient();
 

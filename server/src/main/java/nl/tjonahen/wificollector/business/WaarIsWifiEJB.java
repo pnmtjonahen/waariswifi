@@ -37,15 +37,27 @@ public class WaarIsWifiEJB {
     @PersistenceContext(name = "WaarisWifiPu")
     private EntityManager entityManager;
 
-    
+    /**
+     * 
+     * @return - 
+     */
     public List<EndpointEntity> getAll() {
         return entityManager.createNamedQuery("EndpointEntity.selectAll", EndpointEntity.class).getResultList();
     }
     
+    /**
+     * 
+     * @param name -
+     * @return - 
+     */
     public EndpointEntity get(final String name) {
         return entityManager.find(EndpointEntity.class, name);
     }
     
+    /**
+     * 
+     * @param epe - 
+     */
     @Transactional
     public void update(final EndpointEntity epe) {
         final EndpointEntity current = get(epe.getName());
@@ -59,10 +71,19 @@ public class WaarIsWifiEJB {
             entityManager.merge(current);    
         }
     }
+    /**
+     * 
+     * @param mac -
+     * @return -
+     */
     public MacNameResolverEntity getMacNameResolverEntity(final String mac) {
         return entityManager.find(MacNameResolverEntity.class, mac);
     }
     
+    /**
+     * 
+     * @param epe - 
+     */
     @Transactional
     public void update(final MacNameResolverEntity epe) {
         final MacNameResolverEntity current = getMacNameResolverEntity(epe.getMac());
@@ -74,7 +95,10 @@ public class WaarIsWifiEJB {
         }
     }
     
-    
+    /**
+     * 
+     * @return - 
+     */
     public EndpointMapping getEndpointMapping() {
         final EndpointMapping em = new EndpointMapping();
         EndpointEntity ep = get("P1");
@@ -98,15 +122,28 @@ public class WaarIsWifiEJB {
         return em;
     }
 
+    /**
+     * 
+     * @return -
+     */
     public List<MacNameResolverEntity> getAllMacNameResolvers() {
-        return entityManager.createNamedQuery("MacNameResolverEntity.selectAll", MacNameResolverEntity.class).getResultList();
+        return entityManager.createNamedQuery("MacNameResolverEntity.selectAll", 
+                                            MacNameResolverEntity.class).getResultList();
     }
 
+    /**
+     * 
+     * @param entity - 
+     */
     @Transactional
     public void delete(final MacNameResolverEntity entity) {
         entityManager.remove(entity);
     }
 
+    /**
+     * 
+     * @return - 
+     */
     public MacNameResolver getMacNameResolver() {
         return new MacNameResolver(getAllMacNameResolvers());
     }

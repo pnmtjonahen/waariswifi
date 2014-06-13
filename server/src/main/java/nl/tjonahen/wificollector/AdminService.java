@@ -32,7 +32,9 @@ import nl.tjonahen.wificollector.model.EndpointEntity;
 import nl.tjonahen.wificollector.model.MacNameResolverEntity;
 
 /**
- *
+ * Admin services to administer the application.
+ * 
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 @Path("/admin")
@@ -43,6 +45,11 @@ public class AdminService {
     @EJB
     private WaarIsWifiEJB waarIsWifiEJB;
     
+    /**
+     *  
+     * @param endpointMac -
+     * @return -
+     */
     @GET
     @Path("/{endpointmac}/")
     public Response processGet(@PathParam(value = "endpointmac") final String endpointMac) {
@@ -59,6 +66,10 @@ public class AdminService {
         return Response.noContent().build();
     }
 
+    /**
+     * 
+     * @return -
+     */
     @GET
     @Path("/endpoints/")
     public List<EndpointEntity> processGetRoot() {
@@ -72,6 +83,11 @@ public class AdminService {
         return endpoints;
     }
 
+    /**
+     * 
+     * @param endpoints -
+     * @return -
+     */
     @PUT
     @Path("/endpoints/")
     public Response processPost(final List<EndpointEntity> endpoints) {
@@ -92,11 +108,22 @@ public class AdminService {
         
         return xmlep;
     }
+    
+    /**
+     * 
+     * @return -
+     */
     @GET
     @Path("/macnameresolver/")
     public List<MacNameResolverEntity> getMacNameResolvers() {
         return waarIsWifiEJB.getAllMacNameResolvers();
     }
+    
+    /**
+     * 
+     * @param list -
+     * @return -
+     */
     @PUT
     @Path("/macnameresolver/")
     public Response putMacNameResolvers(final List<MacNameResolverEntity> list) {
