@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.websocket.OnClose;
@@ -36,27 +38,31 @@ import javax.websocket.server.ServerEndpoint;
 @ApplicationScoped
 @ServerEndpoint("/wifiendpoint")
 public class WifiEndpoint {
+    private static final Logger LOGGER = Logger.getLogger(WifiEndpoint.class.getName());
+    
 
     private static final Set<Session> sessions
             = Collections.synchronizedSet(new HashSet<Session>());
 
     @OnOpen
     public void onOpen(final Session session) {
-        System.out.println("Open...");
+        LOGGER.info("Open...");
         sessions.add(session);
     }
 
     @OnMessage
     public void onMessage(final String message, final Session client) {
+        LOGGER.log(Level.FINEST, "onMessage({0})", message);
     }
 
     @OnError
     public void onError(Throwable t) {
+        LOGGER.log(Level.FINEST, "onError({0})", t.getMessage());
     }
 
     @OnClose
     public void onClose(final Session session) {
-        System.out.println("Close...");
+        LOGGER.info("Close...");
         sessions.remove(session);
     }
 
@@ -74,6 +80,7 @@ public class WifiEndpoint {
                                         msg.isTriangulated(),
                                         msg.isExpired()));
                 } catch (IOException ex) {
+                    LOGGER.log(Level.SEVERE, "Sending message {0}", ex.getMessage());
                 }
             }
         }

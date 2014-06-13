@@ -20,6 +20,7 @@
     <modules>
         <module>collector</module>
         <module>server</module>
+        <module>poster</module>
     </modules>
     <dependencyManagement>
         <dependencies>

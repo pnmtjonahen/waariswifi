@@ -50,7 +50,7 @@ public class PhilippeCalculator implements Calculator {
         
         double A = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) - Math.pow(c, 2))/-(2*b*c)) * 180/Math.PI;
         double B = Math.acos((Math.pow(b, 2) - Math.pow(a, 2) - Math.pow(c, 2))/-(2*a*c)) * 180/Math.PI;
-        double C = 180.0 - A - B;
+//        double C = 180.0 - A - B;
         
         double y = c * Math.sin(Math.toRadians( B ));
         double x = Math.sqrt(Math.pow(c, 2) - Math.pow(y, 2));

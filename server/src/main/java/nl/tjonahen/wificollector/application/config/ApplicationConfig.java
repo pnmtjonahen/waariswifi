@@ -42,6 +42,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(nl.tjonahen.wificollector.AdminService.class);
+        resources.add(nl.tjonahen.wificollector.IPAdressLoggerResource.class);
         resources.add(nl.tjonahen.wificollector.WifiDeviceCollectorReceiver.class);
     }
     

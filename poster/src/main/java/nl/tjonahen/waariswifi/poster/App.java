@@ -14,40 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package nl.tjonahen.waariswifi.poster;
 
-package nl.tjonahen.wificollector.calculator;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class Point {
-    private final double x;
-    private final double y;
+public class App {
 
-    public Point(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
+    public static void main(final String... args) {
+        final Client client = ClientBuilder.newClient();
 
-    public double getX() {
-        return x;
+        client
+                .target(args[0])
+                .request()
+                .post(Entity.entity(args[1], MediaType.TEXT_PLAIN));
     }
 
-    public double getY() {
-        return y;
-    }
-    
-    public boolean isValid() {
-        return isXValid() && isYValid();
-    }
-
-    private boolean isYValid() {
-        return !Double.isNaN(y);
-    }
-
-    private boolean isXValid() {
-        return !Double.isNaN(x);
-    }
-    
 }

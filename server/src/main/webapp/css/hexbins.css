@@ -1,0 +1,51 @@
+/*
+Copyright (C) 2014 Philippe Tjon-A-Hen philippe@tjonahen.nl
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/* 
+    Created on : Apr 14, 2014, 8:24:04 PM
+    Author     : Philippe Tjon-A-Hen philippe@tjonahen.nl
+*/
+body {
+    margin: 0px; 
+    overflow: hidden; 
+    font-family: "Helvetica Neue", Helvetica; 
+    font-size: 14px;
+}
+
+.header {
+    margin-top: 20px;
+    margin-left: 20px;
+    font-size: 36px; 
+    font-weight: 300; 
+    display: block; 
+    z-index: 1; 
+    text-shadow: 0 1px 0 #fff;
+}
+.hint {
+    width: 1280px; 
+    right: 0px; 
+    color: rgb(153, 153, 153); 
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+
+.hr-style {
+    border: 0;
+    height: 2px;
+    width: 80%;
+    color: #E8E8E8;
+    background-color: #E8E8E8;
+}

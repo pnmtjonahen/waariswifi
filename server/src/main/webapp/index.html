@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <script type="text/javascript" src="js/libs/d3/d3.v3.js"></script>
         <script type="text/javascript" src="js/libs/jquery/jquery.js"></script>
+        <script type="text/javascript" src="js/wifiendpoint.js"></script>
 
         <style>
             circle {
@@ -50,7 +51,7 @@
                         }
                         update();
                     }
-                }
+                };
 
                 this.removeNode = function(id) {
                     var i = 0;
@@ -63,28 +64,28 @@
                     }
                     nodes.splice(findNodeIndex(id), 1);
                     update();
-                }
+                };
 
                 this.addLink = function(source, target) {
                     links.push({"source": findNode(source), "target": findNode(target)});
                     update();
-                }
+                };
 
                 var findNode = function(id) {
                     for (var i in nodes) {
                         if (nodes[i]["id"] === id)
-                            return nodes[i]
+                            return nodes[i];
                     }
-                    ;
-                }
+                    
+                };
 
                 var findNodeIndex = function(id) {
                     for (var i in nodes) {
                         if (nodes[i]["id"] === id)
-                            return i
+                            return i;
                     }
-                    ;
-                }
+                    
+                };
 
                 // set up the D3 visualisation in the specified element
 
@@ -147,6 +148,18 @@
             }
 
             graph = new myGraph("#graph");
+            
+            var wifiEndpoint = new WifiEndpoint(function(msg) {
+                var obj = JSON.parse(msg.data);
+                console.log('Received: ' + obj.device + "(" + obj.x +","+ obj.y + ")");
+                if (obj.expired === true) {
+                    graph.removeNode(obj.device);
+                } else {
+                    graph.addNode(obj);
+                }
+            });
+        
+        
             $(document).ready(function() {
                 $.getJSON("http://" + location.host + "/server/rest/admin/endpoints",
                             function(data) {
@@ -154,51 +167,8 @@
                                     graph.addNode({device:node.name, x:node.x, y:node.y, endpoint:node.mac, distance:0, triangulated:true, expired:false});
                                 });
                             });
+                wifiEndpoint.setupConnection()            
                             
-                if (!("WebSocket" in window)) {
-                    $('#chatLog, input, button, #examples').fadeOut("fast");
-                    $('<p>Oh no, you need a browser that supports WebSockets. How about <a href="http://www.google.com/chrome">Google Chrome</a>?</p>').appendTo('#container');
-                } else {
-                    //The user has WebSockets
-
-
-                    function connect() {
-                        var socket;
-                        var host = "ws://" + location.host + "/server/wifiendpoint";
-
-                        try {
-                            var socket = new WebSocket(host);
-
-                            message('Socket Status: ' + socket.readyState);
-
-                            socket.onopen = function() {
-                                message('Socket Status: ' + socket.readyState + ' (open) ' + host);
-                            };
-
-                            socket.onmessage = function(msg) {
-                                var obj = JSON.parse(msg.data);
-                                message('Received: ' + obj.device + "(" + obj.x +","+ obj.y + ")");
-                                if (obj.expired === true) {
-                                    graph.removeNode(obj.device);
-                                } else {
-                                    graph.addNode(obj);
-                                }
-                            };
-
-                            socket.onclose = function() {
-                                message('Socket Status: ' + socket.readyState + ' (Closed)');
-                            };
-
-                        } catch (exception) {
-                            message('Error' + exception);
-                        }
-
-                        function message(msg) {
-                            console.log(msg);
-                        }
-                    }//End connect
-                    connect();
-                }//End else
             });
         </script>
     </body>

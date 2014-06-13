@@ -15,39 +15,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.tjonahen.wificollector.calculator;
+package nl.tjonahen.wificollector;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.enterprise.context.RequestScoped;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
 
 /**
+ * REST Web Service
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class Point {
-    private final double x;
-    private final double y;
+@Path("ipadresslogger")
+@RequestScoped
+public class IPAdressLoggerResource {
 
-    public Point(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-    
-    public boolean isValid() {
-        return isXValid() && isYValid();
+    /**
+     * Retrieves representation of an instance of nl.tjonahen.wificollector.IPAdressLoggerResource
+     * @param  ip -
+     * @return an instance of java.lang.String
+     */
+    @GET
+    @Path("/{ip}")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public String get(@PathParam("ip") final String ip) {
+        System.out.println(ip);
+        return "OK";
     }
 
-    private boolean isYValid() {
-        return !Double.isNaN(y);
-    }
-
-    private boolean isXValid() {
-        return !Double.isNaN(x);
-    }
-    
 }

@@ -35,9 +35,7 @@ public class Device {
     
 
     private Point p = new Point(Double.NaN, Double.NaN);
-    
-    private boolean valid;
-    
+   
     private final Calculator calculator;
     private final EndpointMapping endpointMapping;
     private final String name;

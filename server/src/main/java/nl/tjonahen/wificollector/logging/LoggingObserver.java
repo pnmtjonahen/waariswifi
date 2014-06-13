@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.tjonahen.wificollector.logging;
 
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import nl.tjonahen.wificollector.WifiDevicePayload;
@@ -27,14 +27,17 @@ import nl.tjonahen.wificollector.WifiDevicePayload;
  */
 @ApplicationScoped
 public class LoggingObserver {
-        public void onMessage(@Observes WifiDevicePayload msg) {
-            System.out.println(String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s, \"expired\":%s}", 
-                                        msg.getDeviceMac(), 
-                                        msg.getX(), 
-                                        msg.getY(), 
-                                        msg.getEndpointMac(),
-                                        msg.getDistance(),
-                                        msg.isTriangulated(),
-                                        msg.isExpired()));
-        }
+
+    private static final Logger LOGGER = Logger.getLogger(LoggingObserver.class.getName());
+
+    public void onMessage(@Observes WifiDevicePayload msg) {
+        LOGGER.info(String.format("{\"device\":\"%s\", \"x\":\"%f\", \"y\":\"%f\", \"endpoint\":\"%s\", \"distance\":\"%f\", \"triangulated\":%s, \"expired\":%s}",
+                msg.getDeviceMac(),
+                msg.getX(),
+                msg.getY(),
+                msg.getEndpointMac(),
+                msg.getDistance(),
+                msg.isTriangulated(),
+                msg.isExpired()));
+    }
 }

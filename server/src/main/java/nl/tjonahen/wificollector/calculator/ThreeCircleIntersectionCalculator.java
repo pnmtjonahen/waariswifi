@@ -17,8 +17,6 @@
 
 package nl.tjonahen.wificollector.calculator;
 
-import nl.tjonahen.wificollector.device.Device;
-
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
@@ -37,8 +35,7 @@ public class ThreeCircleIntersectionCalculator  implements Calculator {
         final double r1,
         final double x2,
         final double y2,
-        final double r2)
-    {
+        final double r2) {
 
         double a, dx, dy, d, h, rx, ry, x, y;
         double point2_x, point2_y;

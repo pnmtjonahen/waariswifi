@@ -33,15 +33,15 @@ public class App {
         if (args.length == 0) {
             System.out.println("Usage: localMacadress serverBaseUrl [input]");
             System.out.println("If no input file is given app will use stdin");
-            System.exit(0);
-        }
-        // CDI wireing :)
-        final TSharkLogHandler tSharkLogHandler = new TSharkLogHandler(new WifiCollectorClient(ClientBuilder.newClient(), args[0], args[1]));
-        
-        if (args.length >= 3) {
-            tSharkLogHandler.run(new FileInputStream(args[2]));
         } else {
-            tSharkLogHandler.run(System.in);
+            // CDI wireing :)
+            final TSharkLogHandler tSharkLogHandler = new TSharkLogHandler(new WifiCollectorClient(ClientBuilder.newClient(), args[0], args[1]));
+
+            if (args.length >= 3) {
+                tSharkLogHandler.run(new FileInputStream(args[2]));
+            } else {
+                tSharkLogHandler.run(System.in);
+            }
         }
     }
 }

@@ -24,239 +24,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="js/libs/d3/d3.v3.js"></script>
         <script type="text/javascript" src="js/libs/d3/d3.hexbin.v0.min.js"></script>	
         <script type="text/javascript" src="js/libs/jquery/jquery.js"></script>
+        <script type="text/javascript" src="js/wifiendpoint.js"></script>
+        <script type="text/javascript" src="js/heatmap.js"></script>
+        <script type="text/javascript" src="js/hexbins.js"></script>
 
-        <style type="text/css">
-            body {
-                margin: 0px; 
-                overflow: hidden; 
-                font-family: "Helvetica Neue", Helvetica; 
-                font-size: 14px;
-            }
-
-            .header {
-                margin-top: 20px;
-                margin-left: 20px;
-                font-size: 36px; 
-                font-weight: 300; 
-                display: block; 
-                z-index: 1; 
-                text-shadow: 0 1px 0 #fff;
-            }
-            .hint {
-                width: 1280px; 
-                right: 0px; 
-                color: rgb(153, 153, 153); 
-                font-size: 12px;
-                padding-bottom: 20px;
-            }
-
-            .hr-style {
-                border: 0;
-                height: 2px;
-                width: 80%;
-                color: #E8E8E8;
-                background-color: #E8E8E8;
-            }
-        </style>
+        <link href="css/hexbins.css" rel="stylesheet">
     </head>
     <body>
-        <div id="chart"></div>
-
         <script type="text/javascript">
-               var color = []; 
 
-                function componentToHex(c) {
-                    var hex = c.toString(16);
-                    return hex.length == 1 ? "0" + hex : hex;
-                }
-
-                function rgbToHex(r, g, b) {
-                    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-                }
-                function buildColor() {
-                    var red =255, green=255, blue=255;
-                    for (var i = 0; i < 255; i+=25) {
-                        blue = 255-i;
-                        color.push(rgbToHex(red, green, blue));
-                    }    
-                    for (var i = 0; i < 255; i+=25) {
-                        green = 255-i;
-                        color.push(rgbToHex(red, green, blue));
-                    }    
-                    for (var i = 0; i < 255; i+=25) {
-                        red = 255-i;
-                        color.push(rgbToHex(red, green, blue));
-                    }    
-                }
-                buildColor();
 ///////////////////////////////////////////////////////////////////////////
 ////////////// Initiate SVG and create hexagon centers ////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
-//Function to call when you mouseover a node
-            function mover(d) {
-                var el = d3.select(this)
-                        .transition()
-                        .duration(10)
-                        .style("fill-opacity", 0.3)
-                        ;
-            }
-
-//Mouseout function
-            function mout(d) {
-                var el = d3.select(this)
-                        .transition()
-                        .duration(1000)
-                        .style("fill-opacity", 1)
-                        ;
-            }
-            ;
 
 //svg sizes and margins
-            var margin = {
-                top: 30,
-                right: 0,
-                bottom: 0,
-                left: 50
-            };
-
-//The next lines should be run, but this seems to go wrong on the first load in bl.ocks.org
-//var width = $(window).width() - margin.left - margin.right - 40;
-//var height = $(window).height() - margin.top - margin.bottom - 80;
-//So I set it fixed to
-            var width = $(window).width();
-            var height = $(window).height();
+        var margin = {
+            top: 30,
+            right: 0,
+            bottom: 50,
+            left: 50
+        };
 
 //The number of columns and rows of the heatmap
-            var MapColumns = 45,
-                    MapRows = 40;
+        var MapColumns = 45,
+                MapRows = 40;
 
-//The maximum radius the hexagons can have to still fit the screen
-            var hexRadius = d3.min([width / ((MapColumns + 0.5) * Math.sqrt(3)),
-                height / ((MapRows + 1 / 3) * 1.5)]);
-
-//Set the new height and width of the SVG based on the max possible
-            width = MapColumns * hexRadius * Math.sqrt(3);
-            heigth = MapRows * 1.5 * hexRadius + 0.5 * hexRadius;
-
-//Set the hexagon radius
-            var hexbin = d3.hexbin()
-                    .radius(hexRadius);
-
-//Calculate the center positions of each hexagon	
-            var points = [];
-            for (var i = 0; i < MapRows; i++) {
-                for (var j = 0; j < MapColumns; j++) {
-                    points.push([hexRadius * j * 1.75, hexRadius * i * 1.5]);
-                }//for j
-            }//for i
-            var datamap = [];
-            for (var i = 0; i < MapRows; i++) {
-                for (var j = 0; j < MapColumns; j++) {
-                    datamap.push(0);
-                }//for j
-            }//for i
-
-//Create SVG element
-            var svg = d3.select("body").append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-///////////////////////////////////////////////////////////////////////////
-////////////////////// Draw hexagons and color them ///////////////////////
-///////////////////////////////////////////////////////////////////////////
-
-//Start drawing the hexagons
-            svg.append("g")
-                    .selectAll(".hexagon")
-                    .data(hexbin(points))
-                    .enter().append("path")
-                    .attr("class", "hexagon")
-                    .attr("d", function(d) {
-                        return "M" + d.x + "," + d.y + hexbin.hexagon();
-                    })
-                    .attr("stroke", function(d, i) {
-                        return "#fff";
-                    })
-                    .attr("stroke-width", "1px")
-                    .on("mouseover", mover)
-                    .on("mouseout", mout)
-                    ;
+        var heatMap = new HeatMap(MapRows, MapColumns);
+        var hexBins = new HexBins($(window).width(), $(window).height(), MapRows, MapColumns, margin, heatMap);
                     
-        function updateMap() {
-            var node = d3.selectAll("path");
-            node.each(function(d, i) {
-                single = d3.select(this);
-                single.style("fill", function() {
-                        return color[datamap[i]];
-                });
 
-            });
-        }
-            $(document).ready(function() {
-                
-                if (!("WebSocket" in window)) {
-                    $('<p>Oh no, you need a browser that supports WebSockets. How about <a href="http://www.google.com/chrome">Google Chrome</a>?</p>').appendTo('body');
-                } else {
-                    //The user has WebSockets
+        var wifiEndpoint = new WifiEndpoint(function(msg) {
+            var obj = JSON.parse(msg.data);
+            heatMap.update(obj);
+            hexBins.update();
+        });
+        
+        $(document).ready(wifiEndpoint.setupConnection());
+        
 
-                    function connect() {
-                        var socket;
-                        var host = "ws://" + location.host + "/server/wifiendpoint";
-
-                        try {
-                            var socket = new WebSocket(host);
-
-                            message('Socket Status: ' + socket.readyState);
-
-                            socket.onopen = function() {
-                                message('Socket Status: ' + socket.readyState + ' (open) ' + host);
-                            }
-
-                            socket.onmessage = function(msg) {
-                                var obj = JSON.parse(msg.data);
-                                message('Received: ' + obj.device + "(" + obj.x +","+ obj.y + ")");
-                                var row = Math.round(obj.x) -1;
-                                
-                                var datapoint = row * MapRows + Math.round(obj.y);
-                                if (obj.expired === true) {
-                                    datamap[datapoint]--;
-                                    
-                                    if (datamap[datapoint] < 0) {
-                                        datamap[datapoint] = 0;
-                                    }
-                                } else {   
-                                    datamap[datapoint]++;
-                                    
-                                    if (datamap[datapoint] > color.length) {
-                                        datamap[datapoint] = color.length;
-                                    }
-                                }
-                                
-                                updateMap();
-                            }
-
-                            socket.onclose = function() {
-                                message('Socket Status: ' + socket.readyState + ' (Closed)');
-                            }
-
-                        } catch (exception) {
-                            message('Error' + exception);
-                        }
-
-                        function message(msg) {
-                            console.log(msg);
-                        }
-                    }//End connect
-                    connect();
-
-                }//End else
-
-            });
-            
         </script>
-
     </body>
 </html>

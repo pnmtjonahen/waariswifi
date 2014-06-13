@@ -112,10 +112,4 @@ public class AdminService {
         return Response.ok().build();
     }
 
-    private MacNameResolverEntity newMacNameresolver(String string, String string0) {
-        MacNameResolverEntity entity = new MacNameResolverEntity();
-        entity.setMac(string);
-        entity.setName(string0);
-        return entity;
-    }
 }
