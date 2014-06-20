@@ -15,37 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.tjonahen.waariswifi.collector;
+package nl.tjonahen.wificollector;
 
-import java.io.InputStream;
-import org.junit.Before;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class TSharkLogHandlerTest {
+public class TriangulationFactoryTest {
     
 
-    @Mock
-    private WifiCollectorClient client;
-    
-    @Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-    }
-    
     /**
-     * Test of run method, of class TSharkLogHandler.
+     * Test of create method, of class TriangulationFactory.
      */
     @Test
-    public void testRun() {
-        InputStream input = getClass().getResourceAsStream("/testinput.txt");
-        TSharkLogHandler instance = new TSharkLogHandler(client);
-        instance.run(input);
+    public void testCreate() {
+        TriangulationFactory instance = new TriangulationFactory();
+        assertNotNull(instance.create(null, null));
     }
     
 }

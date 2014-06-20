@@ -17,35 +17,53 @@
 
 package nl.tjonahen.waariswifi.collector;
 
-import java.io.InputStream;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Matchers.any;
 import org.mockito.Mock;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class TSharkLogHandlerTest {
+public class WifiCollectorClientTest {
     
+    @Mock
+    private Client client;
+    
+    @Mock
+    private WebTarget webTarget;
 
     @Mock
-    private WifiCollectorClient client;
+    private Builder builder;
+    
+    @Mock
+    private Response response;
     
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
     }
-    
     /**
-     * Test of run method, of class TSharkLogHandler.
+     * Test of process method, of class WifiCollectorClient.
      */
     @Test
-    public void testRun() {
-        InputStream input = getClass().getResourceAsStream("/testinput.txt");
-        TSharkLogHandler instance = new TSharkLogHandler(client);
-        instance.run(input);
+    public void testProcess() {
+        WifiCollectorClient instance = new WifiCollectorClient(client, "aa:aa:aa:aa:aa", "http://localhost");
+        instance.process("");
+        when(client.target("http://localhost/aa:aa:aa:aa:aa/84:51:81:a7:44:47")).thenReturn(webTarget);
+        when(webTarget.request()).thenReturn(builder);
+        when(builder.post(any(Entity.class))).thenReturn(response);
+        when(response.getStatus()).thenReturn(200);
+        instance.process("1403116369.961803000\t84:51:81:a7:44:47\t-56\t2417");
+        
     }
     
 }

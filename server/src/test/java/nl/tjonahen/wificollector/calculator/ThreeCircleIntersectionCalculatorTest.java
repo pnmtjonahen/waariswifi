@@ -17,7 +17,11 @@
 
 package nl.tjonahen.wificollector.calculator;
 
-import org.junit.Assert;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -29,20 +33,57 @@ public class ThreeCircleIntersectionCalculatorTest {
     
     @Test
     public void testCalcLife() {
-        final Point p = calc.recalculate(0.000000,0.000000,1.722709,3.000000,0.000000,15.353661,0.000000,3.000000,0.000000);
+        final Point p = calc.recalculate(0.000000, 0.000000, 1.722709, 3.000000,
+                        0.000000, 15.353661, 0.000000, 3.000000, 0.000000);
         
-        Assert.assertNotNull(p);
-        Assert.assertFalse(p.isValid());
+        assertNotNull(p);
+        assertFalse(p.isValid());
 
     }
     @Test
     public void testCalc() {
         final Point p = calc.recalculate(0.000000,0.000000,3.0,3.000000,0.000000,3.0,0.000000,3.000000,3.000000);
         
-        Assert.assertNotNull(p);
-        Assert.assertTrue(p.isValid());
-        Assert.assertEquals(1.5, p.getX(), 0);
-        Assert.assertEquals(2.598, p.getY(), 3);
+        assertNotNull(p);
+        assertTrue(p.isValid());
+        assertEquals(1.5, p.getX(), 0);
+        assertEquals(2.598, p.getY(), 3);
+        
+    }
+    @Test
+    public void testCalcNoIntercetion() {
+        final Point p = calc.recalculate(0.0,0.0,3.0,
+                20.0,0.0,3.0,
+                0.0,10.0,3.0);
+        
+        assertNotNull(p);
+        assertFalse(p.isValid());
+        assertTrue(Double.isNaN(p.getX()));
+        assertTrue(Double.isNaN(p.getY()));
+        
+    }
+   @Test
+    public void testCalcIntercetTop() {
+        final Point p = calc.recalculate(0.0,0.0,20.0,
+                20.0,0.0,20.0,
+                0.0,20.0,10.35276180410083);
+        
+        assertNotNull(p);
+        assertTrue(p.isValid());
+        assertEquals(10.0, p.getX(), 0);
+        assertEquals(17.320, p.getY(), 3);
+        
+    }
+   @Test
+    public void testCalcIntercetBottom() {
+        final Point p = calc.recalculate(0.0,0.0,20.0,
+                20.0,0.0,20.0,
+                0.0,20.0,38.63703305156274);
+        
+        assertNotNull(p);
+        assertTrue(p.isValid());
+        assertEquals(10.0, p.getX(), 0);
+        assertEquals(17.320, p.getY(), 3);
         
     }
 }

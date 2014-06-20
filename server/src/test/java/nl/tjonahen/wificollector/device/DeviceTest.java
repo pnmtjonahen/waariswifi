@@ -22,6 +22,8 @@ import nl.tjonahen.wificollector.calculator.ThreeCircleIntersectionCalculator;
 import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 /**
@@ -45,17 +47,25 @@ public class DeviceTest {
 //Info:   {"device":"34:51:c9:4c:6e:9e", "x":"NaN", "y":"NaN", "endpoint":"00:16:0a:26:a7:06", "distance":"48.552540", "triangulated":false}
         final EndpointMapping endpointMapping = new EndpointMapping();
      
-        endpointMapping.setP1(new EndpointDevice("P1", 0, 0));
-        endpointMapping.setP2(new EndpointDevice("P2", 3, 0));
-        endpointMapping.setP3(new EndpointDevice("P3", 0, 3));        
+        endpointMapping.setP1(new EndpointDevice("18:3d:a2:57:e3:50", 0, 0));
+        endpointMapping.setP2(new EndpointDevice("00:16:0a:26:a7:06", 3, 0));
+        endpointMapping.setP3(new EndpointDevice("ff:ff:ff:ff:ff:ff", 0, 3));        
         final Device n = new Device("test", endpointMapping, new ThreeCircleIntersectionCalculator());
 
-        n.update("18:3d:a2:57:e3:50", 96.875053);
-        Assert.assertFalse("First distance Device should not be valid", n.isValid());
-        n.update("00:16:0a:26:a7:06", 48.552540);
-        Assert.assertFalse("Second distance Device should not be valid", n.isValid());
-        n.update("ff:ff:ff:ff:ff:ff", 48.552540);
-        Assert.assertFalse("Third distance Device should not be valid", n.isValid());
+        for (int i = 0; i < 6; i++) {
+            // perform 5 updates to get a average distance
+            n.update("18:3d:a2:57:e3:50", 100.0);
+            Assert.assertFalse("First distance Device should not be valid", n.isValid());
+            n.update("00:16:0a:26:a7:06", 50.0);
+            Assert.assertFalse("Second distance Device should not be valid", n.isValid());
+            n.update("ff:ff:ff:ff:ff:ff", 60.0);
+            Assert.assertFalse("Third distance Device should not be valid", n.isValid());
+        }
         
+        assertEquals(100.0, n.getDistance("18:3d:a2:57:e3:50"), 0.0);
+        assertEquals(50.0, n.getDistance("00:16:0a:26:a7:06"), 0.0);
+        assertEquals(60.0, n.getDistance("ff:ff:ff:ff:ff:ff"), 0.0);
+        
+        assertFalse(n.expired());
     }
 }

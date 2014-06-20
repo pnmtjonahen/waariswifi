@@ -15,37 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nl.tjonahen.waariswifi.collector;
+package nl.tjonahen.wificollector;
 
-import java.io.InputStream;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import javax.enterprise.context.ApplicationScoped;
+import nl.tjonahen.wificollector.devicenameing.MacNameResolver;
+import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public class TSharkLogHandlerTest {
-    
-
-    @Mock
-    private WifiCollectorClient client;
-    
-    @Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-    }
+@ApplicationScoped
+public class TriangulationFactory {
     
     /**
-     * Test of run method, of class TSharkLogHandler.
+     * 
+     * @param endpointMapping -
+     * @param macNameResolver -
+     * @return -
      */
-    @Test
-    public void testRun() {
-        InputStream input = getClass().getResourceAsStream("/testinput.txt");
-        TSharkLogHandler instance = new TSharkLogHandler(client);
-        instance.run(input);
+    public Triangulation create(final EndpointMapping endpointMapping, 
+                                final MacNameResolver macNameResolver) 
+    {
+        return Triangulation.getInstance(endpointMapping, macNameResolver);
     }
-    
 }

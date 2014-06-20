@@ -27,7 +27,11 @@ import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * MacNameResolverEntity represents the mac adres to name resolving record. For each known macadres a logical name
+ * is registered.
+ * 
+ * MacNameResolving is used to show a more human readable name than simply the mac adress.
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 @Entity
@@ -59,9 +63,7 @@ public class MacNameResolverEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 19 * hash + Objects.hashCode(this.mac);
-        return hash;
+        return this.mac.hashCode();
     }
 
     @Override
@@ -73,10 +75,7 @@ public class MacNameResolverEntity implements Serializable {
             return false;
         }
         final MacNameResolverEntity other = (MacNameResolverEntity) obj;
-        if (!Objects.equals(this.mac, other.mac)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.mac, other.mac);
     }
     
     

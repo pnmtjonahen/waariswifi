@@ -26,7 +26,11 @@ import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * EndpointEntity represents an endpoint as stored in the database. Enpoints are the devices that perform the 
+ * network monitoring.
+ * 
+ * Enpoints have a name, a mac adres and a fixed location (x,y).
+ * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 @Entity

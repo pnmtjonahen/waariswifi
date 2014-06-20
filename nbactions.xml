@@ -7,4 +7,16 @@
                 <goal>sonar:sonar</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-sonar:sonar preview</actionName>
+            <displayName>sonar:sonar preview</displayName>
+            <goals>
+                <goal>sonar:sonar</goal>
+            </goals>
+            <properties>
+                <sonar.analysis.mode>preview</sonar.analysis.mode>
+                <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+                <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
+            </properties>
+        </action>
     </actions>

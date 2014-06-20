@@ -33,7 +33,10 @@ import java.util.TreeMap;
  * 
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public final class Triangulation {
+//CHECKSTYLE:OFF 
+// class is not final as it then can't b mocked
+public class Triangulation {
+//CHECKSTYLE:ON    
     private MacNameResolver macNameResolver;
     private EndpointMapping endpointMapping;
     private final Map<String, Device> nodeMap;

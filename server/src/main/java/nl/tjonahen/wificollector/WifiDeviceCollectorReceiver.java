@@ -43,6 +43,9 @@ public class WifiDeviceCollectorReceiver {
     
     @EJB
     private WaarIsWifiEJB waarIsWifiEJB;
+    
+    @Inject
+    private TriangulationFactory triangulationFactory;
 
 
     /**
@@ -60,7 +63,7 @@ public class WifiDeviceCollectorReceiver {
             @PathParam(value = "devicemac") final String deviceMac, 
             final String data) 
     {
-        final Triangulation triangulation = Triangulation.getInstance(waarIsWifiEJB.getEndpointMapping(), 
+        final Triangulation triangulation = triangulationFactory.create(waarIsWifiEJB.getEndpointMapping(), 
                                                                             waarIsWifiEJB.getMacNameResolver());
         for (WifiDevicePayload p : triangulation.determineLocation(endpointMac, deviceMac, data)) {
             wsEvent.fire(p);

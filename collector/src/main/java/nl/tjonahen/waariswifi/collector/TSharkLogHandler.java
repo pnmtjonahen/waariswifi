@@ -46,6 +46,9 @@ public class TSharkLogHandler {
         while (true) {
             try {
                 String line = bf.readLine();
+                if ("end".equals(line)) {
+                    return;
+                }
                 if (line != null) {
                     wifiCollectorClient.process(line);
                 } else {

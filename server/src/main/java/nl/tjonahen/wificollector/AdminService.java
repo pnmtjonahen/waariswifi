@@ -46,8 +46,9 @@ public class AdminService {
     private WaarIsWifiEJB waarIsWifiEJB;
     
     /**
-     *  
-     * @param endpointMac -
+     * get the endpoint information of an endpoint by mac adress. 
+     * 
+     * @param endpointMac mac adres of the requested endpoint.
      * @return -
      */
     @GET
@@ -68,7 +69,7 @@ public class AdminService {
 
     /**
      * 
-     * @return -
+     * @return List of all configured endpoints
      */
     @GET
     @Path("/endpoints/")
@@ -84,8 +85,9 @@ public class AdminService {
     }
 
     /**
+     * Store the list of endpoints. 
      * 
-     * @param endpoints -
+     * @param endpoints List of endpoints
      * @return -
      */
     @PUT
@@ -111,7 +113,7 @@ public class AdminService {
     
     /**
      * 
-     * @return -
+     * @return the list of mac-name resolvers.
      */
     @GET
     @Path("/macnameresolver/")
@@ -121,7 +123,7 @@ public class AdminService {
     
     /**
      * 
-     * @param list -
+     * @param list new list of mac-name resolvers
      * @return -
      */
     @PUT

@@ -14,34 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.tjonahen.waariswifi.poster;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
+package nl.tjonahen.wificollector.logging;
+
+import nl.tjonahen.wificollector.WifiDevicePayload;
+import org.junit.Test;
 
 /**
  *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public final class App {
-
-    private App() {
-        
-    }
+public class LoggingObserverTest {
     
     /**
-     * 
-     * @param args - 
+     * Test of onMessage method, of class LoggingObserver.
      */
-    public static void main(final String... args) {
-        final Client client = ClientBuilder.newClient();
-
-        client
-                .target(args[0])
-                .request()
-                .post(Entity.entity(args[1], MediaType.TEXT_PLAIN));
+    @Test
+    public void testOnMessage() {
+        WifiDevicePayload msg = new WifiDevicePayload("aa:aa:aa:aa:aa");
+        LoggingObserver instance = new LoggingObserver();
+        instance.onMessage(msg);
     }
-
+    
 }
