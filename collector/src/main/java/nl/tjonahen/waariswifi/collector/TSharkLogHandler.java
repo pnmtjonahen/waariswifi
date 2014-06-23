@@ -18,8 +18,6 @@ package nl.tjonahen.waariswifi.collector;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  *
@@ -39,10 +37,10 @@ public class TSharkLogHandler {
 
     /**
      * 
-     * @param input - 
+     * @param bf - 
      */
-    public void run(final InputStream input) {
-        final BufferedReader bf = new BufferedReader(new InputStreamReader(input));
+    public void run(final BufferedReader bf) {
+         
         while (true) {
             try {
                 String line = bf.readLine();

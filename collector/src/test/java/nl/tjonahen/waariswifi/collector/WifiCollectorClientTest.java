@@ -65,5 +65,19 @@ public class WifiCollectorClientTest {
         instance.process("1403116369.961803000\t84:51:81:a7:44:47\t-56\t2417");
         
     }
+    /**
+     * Test of process method, of class WifiCollectorClient.
+     */
+    @Test
+    public void testProcessHttp500() {
+        WifiCollectorClient instance = new WifiCollectorClient(client, "aa:aa:aa:aa:aa", "http://localhost");
+        instance.process("");
+        when(client.target("http://localhost/aa:aa:aa:aa:aa/84:51:81:a7:44:47")).thenReturn(webTarget);
+        when(webTarget.request()).thenReturn(builder);
+        when(builder.post(any(Entity.class))).thenReturn(response);
+        when(response.getStatus()).thenReturn(500);
+        instance.process("1403116369.961803000\t84:51:81:a7:44:47\t-56\t2417");
+        
+    }
     
 }

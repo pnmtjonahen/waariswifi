@@ -14,26 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.tjonahen.waariswifi.collector;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import javax.ws.rs.client.ClientBuilder;
 
 /**
  *
- *  args[0] local macadres 
- *  args[1] baseurl 
- *  args[3] optional logfile to monitor if not given use stdin
+ * args[0] local macadres args[1] baseurl args[3] optional logfile to monitor if not given use stdin
+ *
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
-public final class App {
-    private App() {
-        
-    }
+public class App {
+
     /**
-     * 
+     *
      * @param args -
      * @throws FileNotFoundException -
      */
@@ -42,16 +40,37 @@ public final class App {
             System.out.println("Usage: localMacadress serverBaseUrl [input]");
             System.out.println("If no input file is given app will use stdin");
         } else {
-            // CDI wireing :)
             final TSharkLogHandler tSharkLogHandler = new TSharkLogHandler(
-                                            new WifiCollectorClient(ClientBuilder.newClient(), args[0], args[1]));
+                    new WifiCollectorClient(ClientBuilder.newClient(), args[0], args[1]));
 
-            if (args.length >= MIN_ARGS) {
-                tSharkLogHandler.run(new FileInputStream(args[2]));
-            } else {
-                tSharkLogHandler.run(System.in);
-            }
+            final App app = new App(tSharkLogHandler, 
+                                args.length >= MIN_ARGS 
+                                            ? new BufferedReader(new InputStreamReader(new FileInputStream(args[2]))) 
+                                            : new BufferedReader(new InputStreamReader(System.in)));
+            app.run();
         }
+    }
+
+    private final TSharkLogHandler tSharkLogHandler;
+    private final BufferedReader bufferedReader;
+
+    /**
+     * Constructor.
+     * 
+     * @param tSharkLogHandler - tshark log handler
+     * @param bufferedReader - reader to read log statements from
+     */
+    public App(final TSharkLogHandler tSharkLogHandler, final BufferedReader bufferedReader) {
+        this.tSharkLogHandler = tSharkLogHandler;
+        this.bufferedReader = bufferedReader;
+    }
+
+    /**
+     * Starts the loghandler
+     * @throws FileNotFoundException - 
+     */
+    public void run() throws FileNotFoundException {
+        tSharkLogHandler.run(bufferedReader);
     }
     private static final int MIN_ARGS = 3;
 }
