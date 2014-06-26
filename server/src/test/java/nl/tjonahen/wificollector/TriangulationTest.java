@@ -22,6 +22,7 @@ import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import java.util.List;
 import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import org.junit.Assert;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 /**
@@ -66,12 +67,18 @@ public class TriangulationTest {
         Assert.assertEquals(1, determineLocation.size());
         
         Assert.assertEquals("84:51:81:a7:44:47", determineLocation.get(0).getDeviceMac());
-//        Assert.assertEquals(Double.valueOf("61.12402594648713"), Double.valueOf(determineLocation[0].getDistance()));
-//        Assert.assertTrue(Double.isNaN(determineLocation[0].getX()));
-//        Assert.assertTrue(Double.isNaN(determineLocation[0].getY()));
-        
-        
     }
     
 
+    @Test
+    public void test() {
+        final EndpointMapping endpointMapping = new EndpointMapping();
+     
+        endpointMapping.setP1(new EndpointDevice("P1", 0, 0));
+        endpointMapping.setP2(new EndpointDevice("P2", 0, 0));
+        endpointMapping.setP3(new EndpointDevice("P3", 0, 0));
+        final Triangulation triangulate = Triangulation.getInstance(endpointMapping, null);
+
+        assertNotNull(triangulate.getExpiredDevices());
+    }
 }
