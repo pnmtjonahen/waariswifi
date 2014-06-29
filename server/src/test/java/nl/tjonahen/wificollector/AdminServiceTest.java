@@ -17,10 +17,10 @@
 package nl.tjonahen.wificollector;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.ws.rs.core.Response;
 import nl.tjonahen.wificollector.business.WaarIsWifiEJB;
-import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.model.EndpointEntity;
 import nl.tjonahen.wificollector.model.MacNameResolverEntity;
@@ -62,9 +62,9 @@ public class AdminServiceTest {
     @Test
     public void testProcessGet() {
         when(waarIsWifiEJB.getEndpointMapping()).thenReturn(endpointMapping);
-        when(endpointMapping.getP1()).thenReturn(new EndpointDevice("P1", 0, 0));
-        when(endpointMapping.getP2()).thenReturn(new EndpointDevice("P2", 10, 0));
-        when(endpointMapping.getP3()).thenReturn(new EndpointDevice("P3", 0, 10));
+        when(endpointMapping.get("P1")).thenReturn(newEndpointEntity("P1", "", 0, 0));
+        when(endpointMapping.get("P2")).thenReturn(newEndpointEntity("P2", "", 10, 0));
+        when(endpointMapping.get("P3")).thenReturn(newEndpointEntity("P3", "", 0, 10));
 
         Response response = systemUnderTest.processGet("P1");
         assertNotNull(response);
@@ -87,10 +87,12 @@ public class AdminServiceTest {
     @Test
     public void testProcessGetRoot() {
         when(waarIsWifiEJB.getEndpointMapping()).thenReturn(endpointMapping);
-        when(endpointMapping.getP1()).thenReturn(new EndpointDevice("P1", 0, 0));
-        when(endpointMapping.getP2()).thenReturn(new EndpointDevice("P2", 10, 0));
-        when(endpointMapping.getP3()).thenReturn(new EndpointDevice("P3", 0, 10));
-        final List<EndpointEntity> result = systemUnderTest.processGetRoot();
+        final ArrayList<EndpointEntity> arrayList = new ArrayList<EndpointEntity>();
+        arrayList.add(newEndpointEntity("P1", "", 0, 0));
+        arrayList.add(newEndpointEntity("P2", "", 10, 0));
+        arrayList.add(newEndpointEntity("P3", "", 0, 10));
+        when(endpointMapping.getEndpoints()).thenReturn(arrayList);
+        final Collection<EndpointEntity> result = systemUnderTest.processGetRoot();
 
         assertNotNull(result);
         assertEquals(3, result.size());
@@ -159,6 +161,15 @@ public class AdminServiceTest {
         
         verify(waarIsWifiEJB).delete(macNameResolverEntity);
         
+    }
+
+    private EndpointEntity newEndpointEntity(String name, String mac, int x, int y) {
+        final EndpointEntity ee = new EndpointEntity();
+        ee.setName(name);
+        ee.setMac(mac);
+        ee.setX(x);
+        ee.setY(y);
+        return ee;
     }
 
 }

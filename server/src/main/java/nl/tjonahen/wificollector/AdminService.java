@@ -16,7 +16,7 @@
  */
 package nl.tjonahen.wificollector;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -26,7 +26,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import nl.tjonahen.wificollector.business.WaarIsWifiEJB;
-import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.model.EndpointEntity;
 import nl.tjonahen.wificollector.model.MacNameResolverEntity;
@@ -56,14 +55,10 @@ public class AdminService {
     public Response processGet(@PathParam(value = "endpointmac") final String endpointMac) {
         final EndpointMapping endpointMapping = waarIsWifiEJB.getEndpointMapping();
         
-        if (endpointMapping.getP1().isEndpoint(endpointMac)) {
-            return Response.ok(toEndpoint("P1", endpointMapping.getP1())).build();
-        } else  if (endpointMapping.getP2().isEndpoint(endpointMac)) {
-            return Response.ok(toEndpoint("P2", endpointMapping.getP2())).build();
-        } else  if (endpointMapping.getP3().isEndpoint(endpointMac)) {
-            return Response.ok(toEndpoint("P3", endpointMapping.getP3())).build();
+        final EndpointEntity ep = endpointMapping.get(endpointMac);
+        if (ep != null) {
+            return Response.ok(ep).build();
         }
-
         return Response.noContent().build();
     }
 
@@ -73,15 +68,8 @@ public class AdminService {
      */
     @GET
     @Path("/endpoints/")
-    public List<EndpointEntity> processGetRoot() {
-        final EndpointMapping endpointMapping = waarIsWifiEJB.getEndpointMapping();
-        final List<EndpointEntity> endpoints = new ArrayList<>();
-
-        endpoints.add(toEndpoint("P1", endpointMapping.getP1())); 
-        endpoints.add(toEndpoint("P2", endpointMapping.getP2())); 
-        endpoints.add(toEndpoint("P3", endpointMapping.getP3()));
-
-        return endpoints;
+    public Collection<EndpointEntity> processGetRoot() {
+        return waarIsWifiEJB.getEndpointMapping().getEndpoints();
     }
 
     /**
@@ -101,15 +89,6 @@ public class AdminService {
     }
     
     
-    private EndpointEntity toEndpoint(final String name, final EndpointDevice ep) {
-        final EndpointEntity xmlep = new EndpointEntity();
-        xmlep.setName(name);
-        xmlep.setMac(ep.getMac());
-        xmlep.setX(ep.getX());
-        xmlep.setY(ep.getY());
-        
-        return xmlep;
-    }
     
     /**
      * 

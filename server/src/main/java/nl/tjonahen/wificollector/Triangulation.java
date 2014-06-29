@@ -82,10 +82,7 @@ public class Triangulation {
         final String[] fields = data.split(":");
         final double distance = calculateDistance(Math.abs(Double.valueOf(fields[1])), Double.valueOf(fields[2]));
         
-        if (endpointMapping.getP1().isEndpoint(endpointMac) && endpointMapping.getP2().isEndpoint(deviceMac)) {
-            return processEndpointData(endpointMac, deviceMac, distance);
-        }
-        
+    
         if (nodeMap.containsKey(deviceMac)) {
             return processDeviceUpdate(endpointMac, deviceMac, distance);
         }
@@ -97,7 +94,7 @@ public class Triangulation {
                                                     final String deviceMac, 
                                                     final double distance) 
     {
-        final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
+        final List<WifiDevicePayload> result = new ArrayList<>();
         final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
         final Device n = DeviceFactory.create(deviceMac, endpointMapping);
         n.update(endpointMac, distance);
@@ -111,7 +108,7 @@ public class Triangulation {
                                                         final String deviceMac, 
                                                         final double distance) 
     {
-        final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
+        final List<WifiDevicePayload> result = new ArrayList<>();
         final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
         final Device n = nodeMap.get(deviceMac);
         n.update(endpointMac, distance);
@@ -120,23 +117,6 @@ public class Triangulation {
         return result;
     }
 
-    private List<WifiDevicePayload> processEndpointData(final String endpointMac, 
-                                                        final String deviceMac, 
-                                                        final double distance) 
-    {
-        final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
-        endpointMapping.update(endpointMac, deviceMac, distance);
-        
-        result.add(new WifiDevicePayload(true, "P1",
-                endpointMapping.getP1().getX(), endpointMapping.getP1().getY(), "P1", 0));
-        result.add(new WifiDevicePayload(true, "P2",
-                endpointMapping.getP2().getX(), endpointMapping.getP2().getX(), "P2", 0));
-        result.add(new WifiDevicePayload(true, "P3",
-                endpointMapping.getP3().getX(), endpointMapping.getP3().getX(), "P3", 0));
-        
-        
-        return result;
-    }
     
     //CHECKSTYLE:OFF
     double calculateDistance(double levelInDb, double freqInMHz)    {
@@ -150,9 +130,9 @@ public class Triangulation {
      * @return list of wifidevicepayload for nodes that are expired (no update for 5 minutes). 
      */
     public List<WifiDevicePayload> getExpiredDevices() {
-        final List<WifiDevicePayload> result = new ArrayList<WifiDevicePayload>();
+        final List<WifiDevicePayload> result = new ArrayList<>();
         
-        final List<String> removed = new ArrayList<String>();
+        final List<String> removed = new ArrayList<>();
         
         for (Entry<String, Device> entry : nodeMap.entrySet()) {
              if (entry.getValue().expired()) {

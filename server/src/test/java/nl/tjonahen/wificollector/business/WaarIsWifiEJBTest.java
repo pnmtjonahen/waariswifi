@@ -17,6 +17,7 @@
 package nl.tjonahen.wificollector.business;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
@@ -176,17 +177,22 @@ public class WaarIsWifiEJBTest {
     @Test
     public void testGetEndpointMapping() {
         final EndpointEntity endpointEntity = new EndpointEntity();
-        when(entityManager.find(EndpointEntity.class, "P1")).thenReturn(endpointEntity, null);
-        when(entityManager.find(EndpointEntity.class, "P2")).thenReturn(endpointEntity, null);
-        when(entityManager.find(EndpointEntity.class, "P3")).thenReturn(endpointEntity, null);
+        endpointEntity.setMac("P1.mac");
+        endpointEntity.setName("P1");
+        endpointEntity.setX(0);
+        endpointEntity.setY(0);
+        final List<EndpointEntity> arrayList = new ArrayList<>();
+        arrayList.add(endpointEntity);
+
+        when(entityManager.createNamedQuery("EndpointEntity.selectAll", EndpointEntity.class)).thenReturn(query);
+        when(query.getResultList()).thenReturn(arrayList);
 
         EndpointMapping em = systemUnderTest.getEndpointMapping();
         assertNotNull(em);
         
         em = systemUnderTest.getEndpointMapping();
-        assertEquals("P1.mac", em.getP1().getMac());
-        assertEquals("P2.mac", em.getP2().getMac());
-        assertEquals("P3.mac", em.getP3().getMac());
+        assertEquals("P1.mac", em.get("P1.mac").getMac());
+        assertEquals("P1", em.get("P1.mac").getName());
     }
 
     /**

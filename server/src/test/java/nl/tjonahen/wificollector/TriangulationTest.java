@@ -20,7 +20,7 @@ package nl.tjonahen.wificollector;
 import java.io.IOException;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import java.util.List;
-import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
+import nl.tjonahen.wificollector.model.EndpointEntity;
 import org.junit.Assert;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
@@ -35,9 +35,9 @@ public class TriangulationTest {
     public void testCalcDistance() throws IOException {
         final EndpointMapping endpointMapping = new EndpointMapping();
      
-        endpointMapping.setP1(new EndpointDevice("P1", 0, 0));
-        endpointMapping.setP2(new EndpointDevice("P2", 0, 0));
-        endpointMapping.setP3(new EndpointDevice("P3", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P1", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P2", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P3", 0, 0));
         final Triangulation triangulate = Triangulation.getInstance(endpointMapping, null);
         
         Assert.assertEquals("0.01", String.format("%.2f", triangulate.calculateDistance(0, 2460)));
@@ -55,9 +55,9 @@ public class TriangulationTest {
         final String data3 ="1393001370.977584000:-76:2462";
         final EndpointMapping endpointMapping = new EndpointMapping();
      
-        endpointMapping.setP1(new EndpointDevice("P1", 0, 0));
-        endpointMapping.setP2(new EndpointDevice("P2", 0, 0));
-        endpointMapping.setP3(new EndpointDevice("P3", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P1", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P2", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P3", 0, 0));
         final Triangulation triangulate = Triangulation.getInstance(endpointMapping, null);
 
         Assert.assertEquals(1, triangulate.determineLocation(p1, p2, data1).size());
@@ -74,9 +74,9 @@ public class TriangulationTest {
     public void test() {
         final EndpointMapping endpointMapping = new EndpointMapping();
      
-        endpointMapping.setP1(new EndpointDevice("P1", 0, 0));
-        endpointMapping.setP2(new EndpointDevice("P2", 0, 0));
-        endpointMapping.setP3(new EndpointDevice("P3", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P1", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P2", 0, 0));
+        endpointMapping.set(new EndpointEntity("", "P3", 0, 0));
         final Triangulation triangulate = Triangulation.getInstance(endpointMapping, null);
 
         assertNotNull(triangulate.getExpiredDevices());

@@ -23,7 +23,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import nl.tjonahen.wificollector.devicenameing.MacNameResolver;
-import nl.tjonahen.wificollector.endpointdevice.EndpointDevice;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.model.EndpointEntity;
 import nl.tjonahen.wificollector.model.MacNameResolverEntity;
@@ -101,23 +100,8 @@ public class WaarIsWifiEJB {
      */
     public EndpointMapping getEndpointMapping() {
         final EndpointMapping em = new EndpointMapping();
-        EndpointEntity ep = get("P1");
-        if (ep == null) {
-            em.setP1(new EndpointDevice("P1.mac", 0, 0));
-        } else {
-            em.setP1(new EndpointDevice(ep.getMac(), ep.getX(), ep.getY()));
-        }
-        ep = get("P2");
-        if (ep == null) {
-            em.setP2(new EndpointDevice("P2.mac", 0, 0));
-        } else {
-            em.setP2(new EndpointDevice(ep.getMac(), ep.getX(), ep.getY()));
-        }
-        ep = get("P3");
-        if (ep == null) {
-            em.setP3(new EndpointDevice("P3.mac", 0, 0));
-        } else {
-            em.setP3(new EndpointDevice(ep.getMac(), ep.getX(), ep.getY()));
+        for (EndpointEntity ee : getAll()) {
+            em.set(ee);
         }
         return em;
     }

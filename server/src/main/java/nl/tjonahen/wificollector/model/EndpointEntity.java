@@ -47,6 +47,27 @@ public class EndpointEntity implements Serializable {
     @Basic
     private double y;
 
+    /**
+     * Default
+     */
+    public EndpointEntity() {
+        
+    }
+    
+    /**
+     * 
+     * @param name -
+     * @param mac -
+     * @param x -
+     * @param y -
+     */
+    public EndpointEntity(final String name, final String mac, final int x, final int y) {
+        this.name = name;
+        this.mac = mac;
+        this.x = x;
+        this.y = y;
+    }
+
     public String getName() {
         return name;
     }
