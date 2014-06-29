@@ -35,36 +35,24 @@ myApp.directive('smartFloat', function() {
 });
 
 function adminController($scope, adminEndpointsService) {
-    $scope.endpointNames = [{name: "P1"},
-        {name: "P2"},
-        {name: "P3"}];
 
-    $scope.endpoints = [{id: $scope.endpointNames[0]}, {id: $scope.endpointNames[1]}, {id: $scope.endpointNames[2]}];
+
+    $scope.endpoints = [];
 
     $scope.get = function() {
         adminEndpointsService.get(function(data) {
-            data.forEach(function(c) {
-                $scope.endpoints.forEach(function(ep) {
-                    if (ep.id.name === c.name) {
-                        ep.x = c.x;
-                        ep.y = c.y;
-                        ep.mac = c.mac;
-
-                    }
-                });
-
-            });
+            $scope.endpoints = data;
         });
     };
     $scope.get();
     
     $scope.save = function() {
-        $scope.endpoints.forEach(function(ep) {
-           ep.name = ep.id.name; 
-        });
         adminEndpointsService.update($scope.endpoints, function() {
                 $scope.get();
         });
+    };
+    $scope.addNew = function() {
+        $scope.endpoints.push({mac:"", name:"", x:"", y:""});
     };
 
 };

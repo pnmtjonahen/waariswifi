@@ -47,26 +47,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <form name="adminForm">
                 <table>
                     <tr><th>Name</th><th>Mac</th><th>X</th><th>Y</th></tr>
-                    <tr>
-                        <td><input class="mono" type="text" ng-model="endpoints[0].mac" /></td>
-                        <td><select ng-model="endpoints[0].id" ng-options="ep.name for ep in endpointNames"></select></td>
-                        <td><input type="text" ng-model="endpoints[0].x" name="p1x" smart-float/></td>
-                        <td><input type="text" ng-model="endpoints[0].y" name="p1y" smart-float/></td>
+                    <tr ng-repeat="endpoint in endpoints">
+                        <td><input class="mono" type="text" ng-model="endpoint.mac" /></td>
+                        <td><input type="text" ng-model="endpoint.name"/></td>
+                        <td><input type="text" ng-model="endpoint.x"  name="p3x" smart-float/></td>
+                        <td><input type="text" ng-model="endpoint.y"  name="p3y" smart-float/></td>
+                        <td>[<a href ng-click="endpoints.splice($index, 1)">X</a>]</td>
                     </tr>
-                    <tr>
-                        <td><input class="mono" type="text" ng-model="endpoints[1].mac" /></td>
-                        <td><select ng-model="endpoints[1].id" ng-options="ep.name for ep in endpointNames"></select></td>
-                        <td><input type="text" ng-model="endpoints[1].x"  name="p2x" smart-float/></td>
-                        <td><input type="text" ng-model="endpoints[1].y"  name="p2y" smart-float/></td>
-                    </tr>
-                    <tr>
-                        <td><input class="mono" type="text" ng-model="endpoints[2].mac" /></td>
-                        <td><select ng-model="endpoints[2].id" ng-options="ep.name for ep in endpointNames"></select></td>
-                        <td><input type="text" ng-model="endpoints[2].x"  name="p3x" smart-float/></td>
-                        <td><input type="text" ng-model="endpoints[2].y"  name="p3y" smart-float/></td>
-                    </tr>
+                    
                 </table>
-                <button class="btn" ng-disabled="adminForm.$invalid" ng-click="save()">Save</button>                    
+                <button class="btn" ng-disabled="adminForm.$invalid" ng-click="save()">Save</button>       
+                <button class="btn" ng-disabled="adminForm.$invalid" ng-click="addNew()">Add</button>                    
+                
                 </form>
             </div>
         <hr/>
