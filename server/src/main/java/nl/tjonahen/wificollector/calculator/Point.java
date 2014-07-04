@@ -63,6 +63,10 @@ public class Point {
         return !Double.isNaN(x);
     }
 
+    /**
+     * Add the recalculate point to this point and everage the values out.
+     * @param recalculate 
+     */
     public void add(final Point recalculate) {
         if (!recalculate.isValid()) {
             return;

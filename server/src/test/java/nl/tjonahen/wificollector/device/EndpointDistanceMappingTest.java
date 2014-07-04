@@ -19,6 +19,7 @@ package nl.tjonahen.wificollector.device;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
@@ -43,6 +44,8 @@ public class EndpointDistanceMappingTest {
         
         assertTrue(systemUnderTest.containsKey("1"));
         assertFalse(systemUnderTest.containsKey("5"));
+        assertNotNull(systemUnderTest.getDistanceByMacadres("5"));
+        
         assertEquals(4, systemUnderTest.maxNumberEndpoints());
         
         assertEquals("1", systemUnderTest.getEndpoint(0));
