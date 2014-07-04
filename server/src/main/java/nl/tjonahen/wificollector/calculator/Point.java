@@ -23,9 +23,16 @@ package nl.tjonahen.wificollector.calculator;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class Point {
-    private final double x;
-    private final double y;
+    private double x;
+    private double y;
 
+    /**
+     * Default constructor
+     */
+    public Point() {
+        this.x = Double.NaN;
+        this.y = Double.NaN;
+    }
     /**
      * 
      * @param x -
@@ -54,6 +61,23 @@ public class Point {
 
     private boolean isXValid() {
         return !Double.isNaN(x);
+    }
+
+    public void add(final Point recalculate) {
+        if (!recalculate.isValid()) {
+            return;
+        }
+        if (isXValid()) {
+            this.x = (this.x + recalculate.x) / 2.0;
+        } else {
+            this.x = recalculate.x;
+        }
+        if (isYValid()) {
+            this.y = (this.y + recalculate.y) / 2.0;
+        } else {
+            this.y = recalculate.y;
+            
+        }
     }
     
 }

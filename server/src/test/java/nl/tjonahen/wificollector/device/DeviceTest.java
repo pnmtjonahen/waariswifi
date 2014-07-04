@@ -24,6 +24,7 @@ import nl.tjonahen.wificollector.model.EndpointEntity;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -68,5 +69,38 @@ public class DeviceTest {
         assertEquals(60.0, n.getDistance("ff:ff:ff:ff:ff:ff"), 0.0);
         
         assertFalse(n.expired());
+    }
+
+    @Test
+    public void testCalc4Points() throws IOException {
+        final EndpointMapping endpointMapping = new EndpointMapping();
+     
+        endpointMapping.set(new EndpointEntity("P1", "18:3d:a2:57:e3:50", 0, 0));
+        endpointMapping.set(new EndpointEntity("P2", "00:16:0a:26:a7:06", 10, 0));
+        endpointMapping.set(new EndpointEntity("P3", "ff:ff:ff:ff:ff:ff", 0, 10));        
+        endpointMapping.set(new EndpointEntity("P4", "aa:aa:aa:aa:aa:aa", 10, 10));        
+        
+        final Device n = new Device("test", endpointMapping, new ThreeCircleIntersectionCalculator());
+
+        final double distance = Math.sqrt(200) / 2;
+        for (int i = 0; i < 6; i++) {
+            // perform 5 updates to get a average distance
+            n.update("18:3d:a2:57:e3:50", distance);
+            n.update("00:16:0a:26:a7:06", distance);
+            n.update("ff:ff:ff:ff:ff:ff", distance);
+            n.update("aa:aa:aa:aa:aa:aa", distance);
+        }
+        
+        assertEquals(distance, n.getDistance("18:3d:a2:57:e3:50"), 0.0);
+        assertEquals(distance, n.getDistance("00:16:0a:26:a7:06"), 0.0);
+        assertEquals(distance, n.getDistance("ff:ff:ff:ff:ff:ff"), 0.0);
+        assertEquals(distance, n.getDistance("aa:aa:aa:aa:aa:aa"), 0.0);
+        
+        assertFalse(n.expired());
+
+        assertTrue(n.isValid());
+        
+        assertEquals(5.0, n.getX(), 0.0);
+        assertEquals(5.0, n.getY(), 0.0);
     }
 }

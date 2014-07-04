@@ -16,9 +16,6 @@
  */
 package nl.tjonahen.wificollector.device;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.calculator.Calculator;
 import nl.tjonahen.wificollector.calculator.Point;
@@ -36,7 +33,9 @@ public class Device {
     private static final int MAX_NUMBER_OF_DISTANCES = 5;
     private static final int EXPIRED_MINUTES = 5;
 
-    private final Map<String, Distance> macDistanceMapping = new HashMap<>();
+ 
+
+    private final EndpointDistanceMapping endpointDistanceMapping = new EndpointDistanceMapping();
 
     private Point p = new Point(Double.NaN, Double.NaN);
 
@@ -63,29 +62,37 @@ public class Device {
     /**
      * Update the device with a new distance to a endpoint. Recalculate the location of this device.
      *
-     * @param endpointmac -
-     * @param distance -
+     * @param endpointmac mac adress of the endpoint
+     * @param distance distance between this device and the endpoint.
      */
     public void update(final String endpointmac, final double distance) {
         lastupdated = DateTime.now();
-        if (macDistanceMapping.containsKey(endpointmac)) {
-            macDistanceMapping.get(endpointmac).add(distance);
+        updateDistanceToEndpoint(endpointmac, distance);
+        
+        for (int i = 0; i < endpointDistanceMapping.maxNumberEndpoints(); i++) {
+            final String p1 = endpointDistanceMapping.getEndpoint(i);
+            final String p2 = endpointDistanceMapping.getEndpoint(i+1);
+            final String p3 = endpointDistanceMapping.getEndpoint(i+2);
+
+            recalculate(p1, p2, p3);
+        }
+    }
+
+    private void updateDistanceToEndpoint(final String endpointmac, final double distance) {
+        if (endpointDistanceMapping.containsKey(endpointmac)) {
+            endpointDistanceMapping.get(endpointmac).add(distance);
         } else {
             final Distance distanceToP = new Distance(MAX_NUMBER_OF_DISTANCES);
             distanceToP.add(distance);
-            macDistanceMapping.put(endpointmac, distanceToP);
+            endpointDistanceMapping.put(endpointmac, distanceToP);
         }
-        final String p1 = getXdeEntry(1);
-        final String p2 = getXdeEntry(2);
-        final String p3 = getXdeEntry(3);
-        recalculate(p1, p2, p3);
     }
 
     private void recalculate(final String p1, final String p2, final String p3) {
 
-        final Distance distanceToP1 = getDistanceByMacadres(p1);
-        final Distance distanceToP2 = getDistanceByMacadres(p2);
-        final Distance distanceToP3 = getDistanceByMacadres(p3);
+        final Distance distanceToP1 = endpointDistanceMapping.getDistanceByMacadres(p1);
+        final Distance distanceToP2 = endpointDistanceMapping.getDistanceByMacadres(p2);
+        final Distance distanceToP3 = endpointDistanceMapping.getDistanceByMacadres(p3);
         
         final EndpointEntity epP1 = endpointMapping.get(p1);
         final EndpointEntity epP2 = endpointMapping.get(p2);
@@ -95,7 +102,7 @@ public class Device {
                 && !Double.isNaN(distanceToP2.getAverage())
                 && !Double.isNaN(distanceToP3.getAverage())) 
         {
-            p = calculator.recalculate(
+            p.add(calculator.recalculate(
                     epP1.getX(),
                     epP1.getY(),
                     distanceToP1.getAverage(),
@@ -104,7 +111,7 @@ public class Device {
                     distanceToP2.getAverage(),
                     epP3.getX(),
                     epP3.getY(),
-                    distanceToP3.getAverage());
+                    distanceToP3.getAverage()));
         }
     }
 
@@ -136,34 +143,10 @@ public class Device {
      * @return -
      */
     public double getDistance(String endpointMac) {
-        if (macDistanceMapping.containsKey(endpointMac)) {
-            return macDistanceMapping.get(endpointMac).getAverage();
+        if (endpointDistanceMapping.containsKey(endpointMac)) {
+            return endpointDistanceMapping.get(endpointMac).getAverage();
         }
         return 0;
-    }
-
-
-    private String getXdeEntry(int index) {
-        if (macDistanceMapping.entrySet().size() >= index) {
-            int count = 0;
-            for (final Iterator<Map.Entry<String, Distance>> it = macDistanceMapping.entrySet().iterator(); 
-                    it.hasNext();) 
-            {
-                Map.Entry<String, Distance> object = it.next();
-                count++;
-                if (count == index) {
-                    return object.getKey();
-                }
-            }
-        }
-        return "";
-    }
-
-    private Distance getDistanceByMacadres(final String ep) {
-        if (macDistanceMapping.containsKey(ep)) {
-            return macDistanceMapping.get(ep);
-        }
-        return new Distance(EXPIRED_MINUTES, 0);
     }
 
 }
