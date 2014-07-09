@@ -112,6 +112,16 @@ public class Device {
                     epP3.getX(),
                     epP3.getY(),
                     distanceToP3.getAverage()));
+            
+            System.out.println(String.format("%.2f, %.2f, DISTANCE, %.2f, %.2f, DISTANCE, %.2f, %.2f, DISTANCE -> p(%.2f, %.2f)", 
+                    epP1.getX(),
+                    epP1.getY(),
+                    epP2.getX(),
+                    epP2.getY(),
+                    epP3.getX(),
+                    epP3.getY(),
+                    p.getX(), 
+                    p.getY()));
         }
     }
 

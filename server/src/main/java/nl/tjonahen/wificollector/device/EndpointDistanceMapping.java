@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class EndpointDistanceMapping {
 
-    private static final int EXPIRED_MINUTES = 5;
+    private static final int MAX_NUMBER_OF_DISTANCES = 5;
     private final Map<String, Distance> data = new HashMap<>();
     private final ArrayList<String> keys = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public class EndpointDistanceMapping {
         if (data.containsKey(ep)) {
             return data.get(ep);
         }
-        return new Distance(EXPIRED_MINUTES, 0);
+        return new Distance(MAX_NUMBER_OF_DISTANCES, 0);
     }
 
     int maxNumberEndpoints() {

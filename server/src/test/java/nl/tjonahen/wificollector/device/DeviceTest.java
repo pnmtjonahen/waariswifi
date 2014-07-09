@@ -103,4 +103,50 @@ public class DeviceTest {
         assertEquals(5.0, n.getX(), 0.0);
         assertEquals(5.0, n.getY(), 0.0);
     }
+    @Test
+    public void testCalc8Points() throws IOException {
+        final EndpointMapping endpointMapping = new EndpointMapping();
+     
+        endpointMapping.set(new EndpointEntity("P1", "18:3d:a2:57:e3:50", 0, 0));
+        endpointMapping.set(new EndpointEntity("P2", "00:16:0a:26:a7:06", 200, 0));
+        endpointMapping.set(new EndpointEntity("P3", "ff:ff:ff:ff:ff:ff", 100, -100));        
+        endpointMapping.set(new EndpointEntity("P4", "aa:aa:aa:aa:aa:aa", 100, 100));        
+        
+        endpointMapping.set(new EndpointEntity("P5", "bb:aa:aa:aa:aa:aa", 50, -90));        
+        endpointMapping.set(new EndpointEntity("P6", "cc:aa:aa:aa:aa:aa", 150, -90));        
+        endpointMapping.set(new EndpointEntity("P7", "dd:aa:aa:aa:aa:aa", 50, 90));        
+        endpointMapping.set(new EndpointEntity("P8", "ee:aa:aa:aa:aa:aa", 150, 90));        
+        
+        final Device n = new Device("test", endpointMapping, new ThreeCircleIntersectionCalculator());
+
+        final double distance = 100;
+        for (int i = 0; i < 6; i++) {
+            // perform 5 updates to get a average distance
+            n.update("18:3d:a2:57:e3:50", distance);
+            n.update("00:16:0a:26:a7:06", distance);
+            n.update("ff:ff:ff:ff:ff:ff", distance);
+            n.update("aa:aa:aa:aa:aa:aa", distance);
+            n.update("bb:aa:aa:aa:aa:aa", distance);
+            n.update("cc:aa:aa:aa:aa:aa", distance);
+            n.update("dd:aa:aa:aa:aa:aa", distance);
+            n.update("ee:aa:aa:aa:aa:aa", distance);
+        }
+        
+        assertEquals(distance, n.getDistance("18:3d:a2:57:e3:50"), 0.0);
+        assertEquals(distance, n.getDistance("00:16:0a:26:a7:06"), 0.0);
+        assertEquals(distance, n.getDistance("ff:ff:ff:ff:ff:ff"), 0.0);
+        assertEquals(distance, n.getDistance("aa:aa:aa:aa:aa:aa"), 0.0);
+
+        assertEquals(distance, n.getDistance("bb:aa:aa:aa:aa:aa"), 0.0);
+        assertEquals(distance, n.getDistance("cc:aa:aa:aa:aa:aa"), 0.0);
+        assertEquals(distance, n.getDistance("dd:aa:aa:aa:aa:aa"), 0.0);
+        assertEquals(distance, n.getDistance("ee:aa:aa:aa:aa:aa"), 0.0);
+        
+        assertFalse(n.expired());
+
+        assertTrue(n.isValid());
+        
+        assertEquals(100, n.getX(), 1.0);
+        assertEquals(46.6, n.getY(), 0.2);
+    }
 }

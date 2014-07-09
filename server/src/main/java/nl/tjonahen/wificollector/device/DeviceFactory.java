@@ -17,7 +17,7 @@
 
 package nl.tjonahen.wificollector.device;
 
-import nl.tjonahen.wificollector.calculator.SinanCalculator;
+import nl.tjonahen.wificollector.calculator.SmartTechCalculator;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 
 /**
@@ -36,6 +36,6 @@ public final class DeviceFactory {
      * @return -
      */
     public static Device create(final String name, final EndpointMapping endpointMapping) {
-        return new Device(name, endpointMapping, new SinanCalculator());
+        return new Device(name, endpointMapping, new SmartTechCalculator());
     }
 }

@@ -20,15 +20,94 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <title>Try triangulation</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="js/libs/d3/d3.v3.js"></script>
+        <script type="text/javascript" src="js/libs/jquery/jquery.js"></script>
+
     </head>
     <body>
-<svg height="1000" width="800">
-  <circle cx="500" cy="400" r="172" stroke="black" stroke-width="1"  fill="white" fill-opacity="0.0"/>
-  <circle cx="530" cy="400" r="243" stroke="black" stroke-width="1"  fill="white" fill-opacity="0.0"/>
-  <circle cx="500" cy="430" r="30" stroke="black" stroke-width="1"  fill="white" fill-opacity="0.0"/>
-  <line x1="0" y1="400" x2="800" y2="400" style="stroke:rgb(255,0,0);stroke-width:1" />
-  <line x1="500" y1="0" x2="500" y2="800" style="stroke:rgb(255,0,0);stroke-width:1" />
-</svg>
+        <script type="text/javascript">
+            var w = $(window).width() - 10,
+                    h = $(window).height() - 10;
+
+            var woffset = 200
+                    , hoffset = h / 2;
+            var jsonCircles = [];
+
+            addCircle(0, 0, 100);
+            addCircle(50, 90, 100);
+            addCircle(150, 90, 100);
+//            addCircle(100, 100, 100);
+//
+//            addCircle(50, -90, 100);
+//            addCircle(150, -90, 100);
+//            addCircle(50, 90, 100);
+//            addCircle(150, 90, 100);
+            
+            addCircle(99, 46, 10);
+
+
+            var svgContainer = d3.select("body").append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+
+            var circles = svgContainer.selectAll("circle")
+                    .data(jsonCircles)
+                    .enter()
+                    .append("circle");
+
+            var circleAttributes = circles
+                    .attr("cx", function(d) {
+                        return d.x_axis;
+                    })
+                    .attr("cy", function(d) {
+                        return d.y_axis;
+                    })
+                    .attr("r", function(d) {
+                        return d.radius;
+                    })
+                    .style("stroke", function(d) {
+                        return d.color;
+                    })
+                    .style("fill", "white")
+                    .style("fill-opacity", "0.0");
+
+            var jsonLines = [
+                {start_x:"0", start_y:hoffset, end_x:h, end_y:hoffset},
+                {start_x:woffset, start_y:"0", end_x:woffset, end_y:w}
+            ];
+            var lines = svgContainer.selectAll("line")
+                    .data(jsonLines)
+                    .enter()
+                    .append("line");
+
+            var lineAttributes = lines
+                    .attr("x1", function(d) {
+                        return d.start_x;
+                    })
+                    .attr("y1", function(d) {
+                        return d.start_y;
+                    })
+                    .attr("x2", function(d) {
+                        return d.end_x;
+                    })
+                    .attr("y2", function(d) {
+                        return d.end_y;
+                    })
+                    .style("stroke", "rgb(255,0,0)")
+                    .style("stroke-width", "1");
+            
+            function addCircle(x, y, r) {
+                jsonCircles.push({"x_axis": woffset + x, "y_axis": hoffset + y, "radius": r, "color": "black"});
+            }
+        </script>
+        <!--        <svg height="1000" width="1000">
+                <circle cx="500" cy="400" r="110" stroke="black" stroke-width="1"  fill="white" fill-opacity="0.0"/>
+                <circle cx="530" cy="400" r="110" stroke="black" stroke-width="1"  fill="white" fill-opacity="0.0"/>
+                <circle cx="500" cy="430" r="110" stroke="black" stroke-width="1"  fill="white" fill-opacity="0.0"/>
+        
+                <line x1="0" y1="400" x2="1000" y2="400" style="stroke:rgb(255,0,0);stroke-width:1" />
+                <line x1="500" y1="0" x2="500" y2="800" style="stroke:rgb(255,0,0);stroke-width:1" />
+                </svg>-->
 
     </body>
 </html>
