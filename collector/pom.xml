@@ -16,6 +16,8 @@
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
         </dependency>
+        
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

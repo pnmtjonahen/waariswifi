@@ -18,7 +18,6 @@ package nl.tjonahen.waariswifi.collector;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -26,9 +25,9 @@ import javax.ws.rs.core.Response;
  * @author Philippe Tjon-A-Hen philippe@tjonahen.nl
  */
 public class WifiCollectorClient {
-    
+
     private static final int HTTP_RESPONSE_OK = 200;
-    
+
     private static final int FREQUENCY_IDX = 3;
     private static final int DB_IDX = 2;
     private static final int DEVICEMAC_IDX = 1;
@@ -41,7 +40,7 @@ public class WifiCollectorClient {
     private final String endpointmac;
 
     /**
-     * 
+     *
      * @param client -
      * @param endpointmac -
      * @param baseUrl -
@@ -53,7 +52,7 @@ public class WifiCollectorClient {
     }
 
     /**
-     * 
+     *
      * @param line -
      */
     public void process(final String line) {
@@ -67,14 +66,28 @@ public class WifiCollectorClient {
         final String devicemac = fields[DEVICEMAC_IDX];
         final String db = fields[DB_IDX];
         final String frequency = fields[FREQUENCY_IDX];
-        
-        final Response response = client
-                .target(baseUrl + "/" + endpointmac + "/" + devicemac)
-                .request()
-                .post(Entity.entity(timestamp + ":" + db + ":" + frequency, MediaType.TEXT_PLAIN));
 
+        final Response response;
+
+        response = sendJSON(devicemac, timestamp, db, frequency);
         if (response.getStatus() != HTTP_RESPONSE_OK) {
             System.out.println("Recieved HTTP:" + response.getStatus());
         }
     }
+
+    private Response sendJSON(final String devicemac, final String timestamp, final String db, final String frequency) {
+        WifiData data = new WifiData();
+        data.setEndpointmac(endpointmac);
+        data.setDevicemac(devicemac);
+        data.setDb(db);
+        data.setFreq(frequency);
+        data.setTimestamp(timestamp);
+
+        final Response response = client
+                .target(baseUrl + "/" )
+                .request()
+                .post(Entity.xml(data));
+        return response;
+    }
+
 }
