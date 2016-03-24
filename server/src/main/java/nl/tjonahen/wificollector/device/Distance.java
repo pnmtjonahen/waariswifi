@@ -17,6 +17,8 @@
 
 package nl.tjonahen.wificollector.device;
 
+import nl.tjonahen.wificollector.WifiData;
+
 /**
  * Calculates the average distance. Hold up to max number of distances and calculate the average.
  * 
@@ -25,7 +27,7 @@ package nl.tjonahen.wificollector.device;
 public class Distance {
     private final int maxSize;
     
-    private final FixedSizeList<Double> fixedSizeList;
+    private final FixedSizeList<WifiData> fixedSizeList;
     private final double defaultDistance;
     
     /**
@@ -34,7 +36,7 @@ public class Distance {
      */
     public Distance(final int max) {
         this.maxSize = max;
-        this.fixedSizeList = new FixedSizeList<Double>(maxSize);
+        this.fixedSizeList = new FixedSizeList<WifiData>(maxSize);
         this.defaultDistance = Double.NaN;
     }
 
@@ -45,16 +47,16 @@ public class Distance {
      */
     public Distance(final int max, final double def) {
         this.maxSize = max;
-        this.fixedSizeList = new FixedSizeList<Double>(maxSize);
+        this.fixedSizeList = new FixedSizeList<WifiData>(maxSize);
         this.defaultDistance = def;
     }
     
     /**
      * 
-     * @param distance add distance 
+     * @param wifiData - 
      */
-    public void add(final double distance) {
-        fixedSizeList.add(distance);
+    public void add(final WifiData wifiData) {
+        fixedSizeList.add(wifiData);
     }
     
     /**
@@ -62,15 +64,35 @@ public class Distance {
      * @return average distance 
      */
     public double getAverage() {
-        if (fixedSizeList.size() >= maxSize) {
-            double sum = 0;
-            for (Double value: fixedSizeList) {
-                sum += value;
-            }
-            
-            return sum / maxSize;
+        final WifiData min = determineMinimumDb();
+        if (min == null) {
+            return Double.NaN;
         }
-        return defaultDistance;
+            
+        return calculateDistance(Math.abs(Double.valueOf(min.getDb())), Double.valueOf(min.getFreq()));
+
     }
+    
+    //CHECKSTYLE:OFF
+    double calculateDistance(double levelInDb, double freqInMHz)    {
+       final double exp = (27.55 - (20 * Math.log10(freqInMHz)) + levelInDb) / 20.0;
+       return Math.pow(10.0, exp);
+    } 
+    //CHECKSTYLE:ON
+
+    private WifiData determineMinimumDb() {
+        WifiData min = null;
+        for (final WifiData wifiData : fixedSizeList) {
+            if (min == null) {
+                min = wifiData;
+            } else {
+                if (Math.abs(Double.valueOf(wifiData.getDb())) < Math.abs(Double.valueOf(min.getDb())) ) {
+                    min = wifiData;
+                }
+            }
+        }
+        return min;
+    }
+
     
 }

@@ -16,6 +16,8 @@
  */
 package nl.tjonahen.wificollector.device;
 
+import static java.awt.geom.Point2D.distance;
+import nl.tjonahen.wificollector.WifiData;
 import nl.tjonahen.wificollector.endpointdevice.EndpointMapping;
 import nl.tjonahen.wificollector.calculator.Calculator;
 import nl.tjonahen.wificollector.calculator.Point;
@@ -62,29 +64,30 @@ public class Device {
     /**
      * Update the device with a new distance to a endpoint. Recalculate the location of this device.
      *
-     * @param endpointmac mac adress of the endpoint
-     * @param distance distance between this device and the endpoint.
+     * @param wifiData collected wifidata
      */
-    public void update(final String endpointmac, final double distance) {
+    public void update(final WifiData wifiData) {
         lastupdated = DateTime.now();
-        updateDistanceToEndpoint(endpointmac, distance);
+        updateDistanceToEndpoint(wifiData);
         
-        for (int i = 0; i < endpointDistanceMapping.maxNumberEndpoints(); i++) {
-            final String p1 = endpointDistanceMapping.getEndpoint(i);
-            final String p2 = endpointDistanceMapping.getEndpoint(i+1);
-            final String p3 = endpointDistanceMapping.getEndpoint(i+2);
+        if (endpointDistanceMapping.maxNumberEndpoints() > 2) {
+            for (int i = 0; i < endpointDistanceMapping.maxNumberEndpoints(); i++) {
+                final String p1 = endpointDistanceMapping.getEndpoint(i);
+                final String p2 = endpointDistanceMapping.getEndpoint(i+1);
+                final String p3 = endpointDistanceMapping.getEndpoint(i+2);
 
-            recalculate(p1, p2, p3);
+                recalculate(p1, p2, p3);
+            }
         }
     }
 
-    private void updateDistanceToEndpoint(final String endpointmac, final double distance) {
-        if (endpointDistanceMapping.containsKey(endpointmac)) {
-            endpointDistanceMapping.get(endpointmac).add(distance);
+    private void updateDistanceToEndpoint(final WifiData wifiData) {
+        if (endpointDistanceMapping.containsKey(wifiData.getEndpointmac())) {
+            endpointDistanceMapping.get(wifiData.getEndpointmac()).add(wifiData);
         } else {
             final Distance distanceToP = new Distance(MAX_NUMBER_OF_DISTANCES);
-            distanceToP.add(distance);
-            endpointDistanceMapping.put(endpointmac, distanceToP);
+            distanceToP.add(wifiData);
+            endpointDistanceMapping.put(wifiData.getEndpointmac(), distanceToP);
         }
     }
 

@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import nl.tjonahen.wificollector.business.WaarIsWifiEJB;
@@ -50,22 +49,15 @@ public class WifiDeviceCollectorReceiver {
 
     /**
      * Handles the processing of the captured data.
-     * @param endpointMac capturing endpoint
-     * @param deviceMac device
-     * @param data data
+     * @param wifiData data
      * @return HTTP 200
      */
     @POST
-    @Path("/{endpointmac}/{devicemac}/")
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response process(
-            @PathParam(value = "endpointmac") final String endpointMac, 
-            @PathParam(value = "devicemac") final String deviceMac, 
-            final String data) 
-    {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response process(final WifiData wifiData) {
         final Triangulation triangulation = triangulationFactory.create(waarIsWifiEJB.getEndpointMapping(), 
                                                                             waarIsWifiEJB.getMacNameResolver());
-        for (WifiDevicePayload p : triangulation.determineLocation(endpointMac, deviceMac, data)) {
+        for (WifiDevicePayload p : triangulation.determineLocation(wifiData)) {
             wsEvent.fire(p);
         }
         for (WifiDevicePayload p : triangulation.getExpiredDevices()) {
@@ -73,5 +65,5 @@ public class WifiDeviceCollectorReceiver {
         }
         return Response.ok().build();
     }
-
+    
 }

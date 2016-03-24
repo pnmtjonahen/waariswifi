@@ -69,61 +69,44 @@ public class Triangulation {
     /**
      * Determines the location of a device. If the device was one of the 
      * endpoints a new endpoint collection is returned
-     * @param endpointMac -
-     * @param deviceMac -
-     * @param data -
+     * @param wifiData -
      * @return collection of WifiDevicePayloads
      */
-    public List<WifiDevicePayload> determineLocation(final String endpointMac, 
-                                                        final String deviceMac, 
-                                                        final String data) 
+    public List<WifiDevicePayload> determineLocation(final WifiData wifiData) 
     {
         
-        final String[] fields = data.split(":");
-        final double distance = calculateDistance(Math.abs(Double.valueOf(fields[1])), Double.valueOf(fields[2]));
+//        final double distance = calculateDistance(Math.abs(Double.valueOf(wifiData.getDb())), Double.valueOf(wifiData.getFreq()));
         
     
-        if (nodeMap.containsKey(deviceMac)) {
-            return processDeviceUpdate(endpointMac, deviceMac, distance);
+        if (nodeMap.containsKey(wifiData.getDevicemac())) {
+            return processDeviceUpdate(wifiData);
         }
 
-        return processNewDevice(endpointMac, deviceMac, distance);
+        return processNewDevice(wifiData);
     }
 
-    private List<WifiDevicePayload> processNewDevice(final String endpointMac, 
-                                                    final String deviceMac, 
-                                                    final double distance) 
+    private List<WifiDevicePayload> processNewDevice(final WifiData wifiData) 
     {
         final List<WifiDevicePayload> result = new ArrayList<>();
-        final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
-        final Device n = DeviceFactory.create(deviceMac, endpointMapping);
-        n.update(endpointMac, distance);
-        nodeMap.put(deviceMac, n);
+        final String name = (macNameResolver == null ? wifiData.getDevicemac() : macNameResolver.resolve(wifiData.getDevicemac()));
+        final Device n = DeviceFactory.create(wifiData.getDevicemac(), endpointMapping);
+        n.update(wifiData);
+        nodeMap.put(wifiData.getDevicemac(), n);
 
-        result.add(new WifiDevicePayload(false, name, 0, 0, endpointMac,  distance));
+        result.add(new WifiDevicePayload(false, name, 0, 0, wifiData.getEndpointmac(),  0));
         return result;
     }
 
-    private List<WifiDevicePayload> processDeviceUpdate(final String endpointMac, 
-                                                        final String deviceMac, 
-                                                        final double distance) 
+    private List<WifiDevicePayload> processDeviceUpdate(final WifiData wifiData) 
     {
         final List<WifiDevicePayload> result = new ArrayList<>();
-        final String name = (macNameResolver == null ? deviceMac : macNameResolver.resolve(deviceMac));
-        final Device n = nodeMap.get(deviceMac);
-        n.update(endpointMac, distance);
-        result.add(new WifiDevicePayload(n.isValid(), name, n.getX(), n.getY(), endpointMac, 
-                                                                                n.getDistance(endpointMac)));
+        final String name = (macNameResolver == null ? wifiData.getDevicemac() : macNameResolver.resolve(wifiData.getDevicemac()));
+        final Device n = nodeMap.get(wifiData.getDevicemac());
+        n.update(wifiData);
+        result.add(new WifiDevicePayload(n.isValid(), name, n.getX(), n.getY(), wifiData.getEndpointmac(), 
+                                                                                n.getDistance(wifiData.getEndpointmac())));
         return result;
     }
-
-    
-    //CHECKSTYLE:OFF
-    double calculateDistance(double levelInDb, double freqInMHz)    {
-       final double exp = (27.55 - (20 * Math.log10(freqInMHz)) + levelInDb) / 20.0;
-       return Math.pow(10.0, exp);
-    } 
-    //CHECKSTYLE:ON
     
     /**
      * 

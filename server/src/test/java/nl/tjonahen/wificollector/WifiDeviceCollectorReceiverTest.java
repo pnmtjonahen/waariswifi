@@ -58,15 +58,21 @@ public class WifiDeviceCollectorReceiverTest {
      */
     @Test
     public void testProcess() {
+        final WifiData d1 = new WifiData();
+        d1.setEndpointmac("aa:aa");
+        d1.setDevicemac("bb:bb");
+        d1.setDb("-44");
+        d1.setFreq("2462");
+        
         
         when(triangulationFactory.create(null, null)).thenReturn(triangulation);
         final ArrayList<WifiDevicePayload> deviceList = new ArrayList<>();
-        deviceList.add(new WifiDevicePayload("bb:bb:bb:bb:bb"));
-        when(triangulation.determineLocation("aa:aa:aa:aa:aa", "bb:bb:bb:bb:bb", "data"))
+        deviceList.add(new WifiDevicePayload("bb:bb"));
+        when(triangulation.determineLocation(d1))
                 .thenReturn(deviceList);
         when(triangulation.getExpiredDevices()).thenReturn(deviceList);
         
-        Response result = systemUnderTest.process("aa:aa:aa:aa:aa", "bb:bb:bb:bb:bb", "data");
+        Response result = systemUnderTest.process(d1);
         
         
     }
